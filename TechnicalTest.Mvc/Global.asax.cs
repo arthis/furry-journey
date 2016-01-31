@@ -40,6 +40,8 @@ namespace TechnicalTest.Mvc
 
         protected void Application_Start()
         {
+            
+
             Action<Account> saveUserToSession = (account) =>
             {
                 HttpContext.Current.Session.Remove("account");
@@ -56,6 +58,9 @@ namespace TechnicalTest.Mvc
             var serviceAccount = new ServiceAccount(repoAccount, saveUserToSession,getFromSession);
 
             var filterConfig = new FilterConfig(serviceAccount);
+
+            var controllerFactory = new PoorManControllerFactory(serviceAccount);
+            ControllerBuilder.Current.SetControllerFactory(controllerFactory);
 
             AreaRegistration.RegisterAllAreas();
             GlobalConfiguration.Configure(WebApiConfig.Register);

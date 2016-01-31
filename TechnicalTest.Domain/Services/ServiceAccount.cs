@@ -60,6 +60,28 @@ namespace TechnicalTest.Domain.Services
                 return await Task.FromResult(false);
         }
 
-        
+        public async Task<bool> RemoveCharacterAsync(Guid idCharacter)
+        {
+            var currentSession = _getFromSession();
+
+            var account = _repoAccount.GetById(currentSession.Id);
+
+            if (account.RemoveCharacter(idCharacter))
+                return await _repoAccount.SaveAsync(account);
+            else
+                return await Task.FromResult(false);
+        }
+
+        public async Task<bool> RetrieveCharacterAsync(Guid idCharacter)
+        {
+            var currentSession = _getFromSession();
+
+            var account = _repoAccount.GetById(currentSession.Id);
+
+            if (account.RetrieveCharacter(idCharacter))
+                return await _repoAccount.SaveAsync(account);
+            else
+                return await Task.FromResult(false);
+        }
     }
 }

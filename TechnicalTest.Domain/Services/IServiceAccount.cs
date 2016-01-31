@@ -13,5 +13,8 @@ namespace TechnicalTest.Domain.Services
         Account getCurrentAccount();
         Task<IEnumerable<Character>> GetCharactersAsync();
         Task<bool> CreateCharacterAsync(string name, int level, Race race, Faction faction, Class @class);
+        Task<bool> RemoveCharacterAsync(Guid idCharacter);
+        Task<bool> RetrieveCharacterAsync(Guid idCharacter);
+        
     }
 }

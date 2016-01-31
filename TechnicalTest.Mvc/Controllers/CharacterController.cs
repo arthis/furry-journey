@@ -114,7 +114,6 @@ namespace TechnicalTest.Mvc.Controllers
 
         public async Task<Response> CreateCharacterAsync(CreateCharacter cmd)
         {
-            //todo validate that fields are not empty
             var cmdValidation = new CommandValidation();
 
             Domain.Model.Faction faction = null;
@@ -128,14 +127,54 @@ namespace TechnicalTest.Mvc.Controllers
             //cmdValidation.validate(() => cmd.Level<1 || cmd.Level>100, "level is not available"); not in the rules.. :)
 
             if (!cmdValidation.IsValid())
+                //todo give back some 4/5xx love?
                 return cmdValidation.ToResponse();
             else
             {
                 var result = await _serviceAccount.CreateCharacterAsync(cmd.Name, cmd.Level, race, faction, @class);
                 var executionResult = new ExecutionValidation(result );
+                //todo give back some 4/5xx love if it failed?
                 return executionResult.ToResponse();
             }
                 
+        }
+
+        public async Task<Response> RemoveCharacterAsync(Guid idCharacter)
+        {
+            var cmdValidation = new CommandValidation();
+
+            cmdValidation.validate(() => idCharacter==Guid.Empty, "idCharacter cannot be empty");
+
+            if (!cmdValidation.IsValid())
+                //todo give back some 4/5xx love?
+                return cmdValidation.ToResponse();
+            else
+            {
+                var result = await _serviceAccount.RemoveCharacterAsync(idCharacter);
+
+                var executionResult = new ExecutionValidation(result);
+                //todo give back some 4/5xx love if it failed?
+                return executionResult.ToResponse();
+            }
+        }
+
+        public async Task<Response> RetrieveCharacterAsync(Guid idCharacter)
+        {
+            var cmdValidation = new CommandValidation();
+
+            cmdValidation.validate(() => idCharacter == Guid.Empty, "idCharacter cannot be empty");
+
+            if (!cmdValidation.IsValid())
+                //todo give back some 4/5xx love?
+                return cmdValidation.ToResponse();
+            else
+            {
+                var result = await _serviceAccount.RetrieveCharacterAsync(idCharacter);
+
+                var executionResult = new ExecutionValidation(result);
+                //todo give back some 4/5xx love if it failed?
+                return executionResult.ToResponse();
+            }
         }
     }
 }

@@ -14,7 +14,6 @@ namespace TechnicalTest.Tests
     [TestFixture]
     public class CharacterControllerTest
     {
-
         public IRepoAccount createFakeRepo()
         {
             var orgrimm = new Character() { Id = Guid.NewGuid(), Name = "Orgrim Doomhammer", Class = Class.Warrior, Faction = Faction.Horde, Level = 100, Race = Race.Orc };
@@ -28,7 +27,6 @@ namespace TechnicalTest.Tests
 
             return new SimpleRepoAccount(ds);
         }
-
 
         [Test]
         public async Task Get_will_fetch_only_data_for_the_Account()
@@ -152,6 +150,138 @@ namespace TechnicalTest.Tests
             Assert.IsTrue(result.IsOk);
         }
 
-        
+        [Test]
+        public async Task remove_active_character_from_account()
+        {
+            // Arrange
+            IRepoAccount repoAccount = createFakeRepo();
+            Account mutableAccount = null;
+            Action<Account> saveUserToSession = (account) => mutableAccount = account;
+            Func<Account> getFromSession = () => mutableAccount;
+            IServiceAccount serviceAccount = new ServiceAccount(repoAccount, saveUserToSession, getFromSession);
+
+            serviceAccount.authenticate("wow", "wow");
+            CharacterController controller = new CharacterController(serviceAccount);
+            var cmd = new CreateCharacter() {
+                Id = Guid.NewGuid(),
+                Name = "Orgrim Doomhammer",
+                Class = Class.Warrior.ToString(),
+                Faction = Faction.Horde.ToString(),
+                Level = 100,
+                Race = Race.Orc.ToString()
+            };
+            await controller.CreateCharacterAsync(cmd);
+            var currentAccount = serviceAccount.getCurrentAccount();
+            var idCharacter = currentAccount.Characters[0].Id;
+
+            // Act
+            var result = await controller.RemoveCharacterAsync(idCharacter);  
+
+            // Assert
+            Assert.IsNotNull(result);
+            Assert.IsTrue(result.IsOk);
+        }
+
+        [Test]
+        public async Task remove_empty_guid_character_from_account()
+        {
+            // Arrange
+            IRepoAccount repoAccount = createFakeRepo();
+            Account mutableAccount = null;
+            Action<Account> saveUserToSession = (account) => mutableAccount = account;
+            Func<Account> getFromSession = () => mutableAccount;
+            IServiceAccount serviceAccount = new ServiceAccount(repoAccount, saveUserToSession, getFromSession);
+
+            serviceAccount.authenticate("wow", "wow");
+            CharacterController controller = new CharacterController(serviceAccount);
+            var cmd = new CreateCharacter()
+            {
+                Id = Guid.NewGuid(),
+                Name = "Orgrim Doomhammer",
+                Class = Class.Warrior.ToString(),
+                Faction = Faction.Horde.ToString(),
+                Level = 100,
+                Race = Race.Orc.ToString()
+            };
+            await controller.CreateCharacterAsync(cmd);
+            var idCharacter = Guid.Empty;
+
+            // Act
+            var result = await controller.RemoveCharacterAsync(idCharacter);
+
+            // Assert
+            Assert.IsNotNull(result);
+            Assert.IsFalse(result.IsOk);
+        }
+
+
+        [Test]
+        public async Task retrieve_inactive_character_from_account()
+        {
+            // Arrange
+            IRepoAccount repoAccount = createFakeRepo();
+            Account mutableAccount = null;
+            Action<Account> saveUserToSession = (account) => mutableAccount = account;
+            Func<Account> getFromSession = () => mutableAccount;
+            IServiceAccount serviceAccount = new ServiceAccount(repoAccount, saveUserToSession, getFromSession);
+
+            serviceAccount.authenticate("wow", "wow");
+            CharacterController controller = new CharacterController(serviceAccount);
+            var cmd = new CreateCharacter()
+            {
+                Id = Guid.NewGuid(),
+                Name = "Orgrim Doomhammer",
+                Class = Class.Warrior.ToString(),
+                Faction = Faction.Horde.ToString(),
+                Level = 100,
+                Race = Race.Orc.ToString()
+            };
+            await controller.CreateCharacterAsync(cmd);
+            var currentAccount = serviceAccount.getCurrentAccount();
+            var idCharacter = currentAccount.Characters[0].Id;
+            await controller.RemoveCharacterAsync(idCharacter);
+
+            // Act
+            var result = await controller.RetrieveCharacterAsync(idCharacter);
+
+            // Assert
+            Assert.IsNotNull(result);
+            Assert.IsTrue(result.IsOk);
+        }
+
+        [Test]
+        public async Task retrieve_empty_guid_character_from_account()
+        {
+            // Arrange
+            IRepoAccount repoAccount = createFakeRepo();
+            Account mutableAccount = null;
+            Action<Account> saveUserToSession = (account) => mutableAccount = account;
+            Func<Account> getFromSession = () => mutableAccount;
+            IServiceAccount serviceAccount = new ServiceAccount(repoAccount, saveUserToSession, getFromSession);
+
+            serviceAccount.authenticate("wow", "wow");
+            CharacterController controller = new CharacterController(serviceAccount);
+            var cmd = new CreateCharacter()
+            {
+                Id = Guid.NewGuid(),
+                Name = "Orgrim Doomhammer",
+                Class = Class.Warrior.ToString(),
+                Faction = Faction.Horde.ToString(),
+                Level = 100,
+                Race = Race.Orc.ToString()
+            };
+            await controller.CreateCharacterAsync(cmd);
+            var currentAccount = serviceAccount.getCurrentAccount();
+            var idCharacter = currentAccount.Characters[0].Id;
+            await controller.RemoveCharacterAsync(idCharacter);
+
+            // Act
+            var result = await controller.RetrieveCharacterAsync(Guid.Empty);
+
+            // Assert
+            Assert.IsNotNull(result);
+            Assert.IsFalse(result.IsOk);
+        }
+
     }
 }

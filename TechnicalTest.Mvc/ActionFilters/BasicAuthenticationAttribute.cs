@@ -38,7 +38,7 @@ namespace TechnicalTest.Mvc.ActionFilters
 
         public void OnActionExecuted(ActionExecutedContext filterContext)
         {
-            throw new NotImplementedException();
+            
         }
     }
 
