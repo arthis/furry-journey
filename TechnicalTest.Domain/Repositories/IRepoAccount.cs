@@ -12,5 +12,6 @@ namespace TechnicalTest.Domain.Repositories
         Account Get(string username);
         Task<IEnumerable<Character>> GetCharactersAsync(Account account);
         Account GetById(Guid id);
+        Task<bool> SaveAsync(Account account);
     }
 }

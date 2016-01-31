@@ -18,9 +18,8 @@ namespace TechnicalTest.Domain.Model
         
         public List<Character> Characters { get; set; }
 
-        public Task<ValidationResult> CreateCharacterAsync(string name, int level, Race race, Faction faction, Class @class)
+        public bool CreateCharacter(string name, int level, Race race, Faction faction, Class @class)
         {
-
             var newCharacter = new Character()
             {
                 Name = name,
@@ -30,19 +29,37 @@ namespace TechnicalTest.Domain.Model
                 Class = @class
             };
 
-            var validationResult = new ValidationResult()
-            {
-                    IsOk = CharacterSpecifications.Factions
+            if ( CharacterSpecifications.Factions
                             .And(CharacterSpecifications.DruidSpecifications)
                             .And(CharacterSpecifications.BloodElfSpecifications)
                             .IsSatisfiedBy(newCharacter)
                             && AccountSpecifications.DeathKnightSpecifications(newCharacter)
-                            .IsSatisfiedBy(this)
-            };
+                            .IsSatisfiedBy(this))
+            {
+                Characters.Add(newCharacter);
+                return true;
+            }
+            else
+                return false;
+        }
 
-            Characters.Add(newCharacter);
+        public bool RemoveCharacter(Guid idCharacter)
+        {
+            var character = Characters.FirstOrDefault(c => c.Id == idCharacter && c.IsActive);
+            if (character == null) return false;
 
-            return Task.FromResult(validationResult);
+            character.Disable();
+            return true;
+        }
+
+        public bool RetrieveCharacter(Guid idCharacter)
+        {
+            var character = Characters.FirstOrDefault(c => c.Id == idCharacter && !c.IsActive);
+
+            if (character == null) return false;
+
+            character.Enable();
+            return true;
         }
 
         public override bool Equals(object obj)

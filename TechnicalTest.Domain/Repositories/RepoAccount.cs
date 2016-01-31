@@ -34,5 +34,11 @@ namespace TechnicalTest.Domain.Repositories
         {
             return Task.FromResult( _dataSource[account.Name].Characters.AsEnumerable());
         }
+
+        public async Task<bool> SaveAsync(Account account)
+        {
+            await Task.Delay(100);
+            return await Task.FromResult(true);
+        }
     }
 }

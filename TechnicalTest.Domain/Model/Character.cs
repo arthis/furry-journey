@@ -9,14 +9,30 @@ namespace TechnicalTest.Domain.Model
 {
     public class Character
     {
+        private bool _isActive ;
+
         public Guid Id { get; set; }
         public string Name { get; set; }
         public int Level { get; set; }
         public Race Race { get; set; }
         public Faction Faction { get; set; }
         public Class Class { get; set; }
-        public bool IsActive { get; set; }
+        public bool IsActive { get { return _isActive; } }
 
-        
+        public Character()
+        {
+            _isActive = true;
+        }
+
+        public void Disable()
+        {
+            _isActive = false;
+        }
+
+        public void Enable()
+        {
+            _isActive = true;
+        }
+
     }
 }

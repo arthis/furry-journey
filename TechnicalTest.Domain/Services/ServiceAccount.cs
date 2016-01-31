@@ -49,15 +49,15 @@ namespace TechnicalTest.Domain.Services
             return await _repoAccount.GetCharactersAsync(account);
         }
 
-        public async Task<ValidationResult> CreateCharacterAsync(string name, int level, Race race, Faction faction, Class @class)
+        public async Task<bool> CreateCharacterAsync(string name, int level, Race race, Faction faction, Class @class)
         {
             var currentSession = _getFromSession();
             var account = _repoAccount.GetById(currentSession.Id);
 
-            
-            //todo what to do if int is not in enum??
-            return await account.CreateCharacterAsync(name, level, race, faction, @class);
-            
+            if (account.CreateCharacter(name, level, race, faction, @class))
+                return await _repoAccount.SaveAsync(account);
+            else
+                return await Task.FromResult(false);
         }
 
         
