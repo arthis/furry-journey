@@ -7,148 +7,51 @@ using TechnicalTest.Domain.Core;
 
 namespace TechnicalTest.Domain.Model
 {
-    public class Is_Always_True : ISpecification<Character, ValidationResult>
+    public class Has_Level55_Character : ISpecification<Account>
     {
-        public bool IsSatisfiedBy(Character character, ValidationResult validationResult)
+
+        public bool IsSatisfiedBy(Account account)
         {
-            return true;
+            return account.Characters.Any(c=> c.Level>=55);
         }
     }
 
-    public class Is_Horde : ISpecification<Character, ValidationResult>
+    public class Is_Character_DeathKnight : ISpecification<Account>
     {
-        public bool IsSatisfiedBy(Character character, ValidationResult validationResult)
+        Character _character;
+
+        public Is_Character_DeathKnight(Character character)
         {
-            return character.Faction == Faction.Horde;
+            if (character== null) throw new Exception("character cannot be null");
+
+            _character = character;
         }
-
-    }
-
-    public class Is_Alliance : ISpecification<Character, ValidationResult>
-    {
-        public bool IsSatisfiedBy(Character character, ValidationResult validationResult)
+        public bool IsSatisfiedBy(Account account)
         {
-            return character.Faction == Faction.Alliance;
-        }
-    }
-
-    public class Is_Orc_Tauren_or_Elf : ISpecification<Character, ValidationResult>
-    {
-
-        public bool IsSatisfiedBy(Character character, ValidationResult validationResult)
-        {
-            var result = 
-                character.Race == Race.Orc
-                || character.Race == Race.Tauren
-                || character.Race == Race.BloodElf;
-
-            validationResult.IsOk |= result;
-
-            return result;
-        }
-    }
-
-    public class Is_Human_Gnome_or_Worgen : ISpecification<Character, ValidationResult>
-    {
-
-        public bool IsSatisfiedBy(Character character, ValidationResult validationResult)
-        {
-            var result = character.Race == Race.Human
-                || character.Race == Race.Gnome
-                || character.Race == Race.Worgen;
-
-            validationResult.IsOk |= result;
-
-            return result;
-        }
-    }
-
-    public class Is_Tauren_or_Worgen : ISpecification<Character, ValidationResult>
-    {
-
-        public bool IsSatisfiedBy(Character character, ValidationResult validationResult)
-        {
-            var result =
-                character.Race == Race.Tauren
-                || character.Race == Race.Worgen;
-            validationResult.IsOk |= result;
-            return result;
-        }
-    }
-
-    public class Is_Druid : ISpecification<Character, ValidationResult>
-    {
-
-        public bool IsSatisfiedBy(Character character, ValidationResult validationResult)
-        {
-            var result = character.Class == Class.Druid;
-
-            validationResult.IsOk |= result;
-            return result;
-        }
-    }
-
-    public class Is_BloodElf : ISpecification<Character, ValidationResult>
-    {
-
-        public bool IsSatisfiedBy(Character character, ValidationResult validationResult)
-        {
-            var result = character.Race == Race.BloodElf;
-
-            validationResult.IsOk |= result;
-            return result;
-        }
-    }
-
-    public class Is_Warrior : ISpecification<Character, ValidationResult>
-    {
-
-        public bool IsSatisfiedBy(Character character, ValidationResult validationResult)
-        {
-            var result = character.Class == Class.Warrior;
-
-            validationResult.IsOk |= result;
-            return result;
+            return _character.Class == Class.DeathKnight;
         }
     }
 
     public static class AccountSpecifications
     {
-        private static ISpecification<Character, ValidationResult> @Spec { get { return new Is_Always_True(); } }
-
-        public static ISpecification<Character, ValidationResult> Factions {
-            get {
-                var is_Horde = new Is_Horde();
-                var is_Alliance = new Is_Alliance();
-                var is_Orc_Tauren_or_Elf = new Is_Orc_Tauren_or_Elf();
-                var is_Human_Gnome_or_Worgen = new Is_Human_Gnome_or_Worgen();
-
-                return @Spec.AndIf(is_Alliance).Then(is_Human_Gnome_or_Worgen)
-                       .AndIf(is_Horde).Then(is_Orc_Tauren_or_Elf);
-            }
-        }
-
-        public static ISpecification<Character, ValidationResult> DruidSpecifications
+        private class Is_Always_True : ISpecification<Account>
         {
-            get
+            public bool IsSatisfiedBy(Account account)
             {
-                var is_Druid = new Is_Druid();
-                var is_Tauren_or_Worgen = new Is_Tauren_or_Worgen();
-
-                return @Spec.AndIf(is_Druid).Then(is_Tauren_or_Worgen);
+                return true;
             }
         }
 
-        public static ISpecification<Character, ValidationResult> BloodElfSpecifications
+        private static ISpecification<Account> @Spec { get { return new Is_Always_True(); } }
+
+        public static ISpecification<Account> DeathKnightSpecifications(Character character)
         {
-            get
-            {
-                var is_BloodElf = new Is_BloodElf();
-                var is_warrior = new Is_Warrior();
+            var is_Character_DeathKnight = new Is_Character_DeathKnight(character);
+            var has_Level55_Character = new Has_Level55_Character();
 
-                return @Spec.AndIf(is_BloodElf).Then(is_warrior.Not());
-            }
+            return @Spec.AndIf(is_Character_DeathKnight).Then(has_Level55_Character);
         }
+
 
     }
 

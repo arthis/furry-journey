@@ -8,7 +8,7 @@ using TechnicalTest.Domain.Repositories;
 
 namespace TechnicalTest.Domain.Services
 {
-    public class ServiceAccount :IServiceAccount
+    public class ServiceAccount : IServiceAccount
     {
         Action<Account> _saveUserToSession;
         Func<Account> _getFromSession;
@@ -49,14 +49,17 @@ namespace TechnicalTest.Domain.Services
             return await _repoAccount.GetCharactersAsync(account);
         }
 
-        public async Task<ValidationResult> CreateCharacterAsync(string name, int level, int race, int faction, int @class)
+        public async Task<ValidationResult> CreateCharacterAsync(string name, int level, Race race, Faction faction, Class @class)
         {
             var currentSession = _getFromSession();
             var account = _repoAccount.GetById(currentSession.Id);
 
+            
             //todo what to do if int is not in enum??
-            return await account.CreateCharacterAsync(name, level, (Race)race, (Faction)faction, (Class)@class);
+            return await account.CreateCharacterAsync(name, level, race, faction, @class);
             
         }
+
+        
     }
 }

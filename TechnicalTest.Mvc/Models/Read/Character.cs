@@ -10,9 +10,9 @@ namespace TechnicalTest.Mvc.Models.Read
         public Guid Id { get; set; }
         public string Name { get; set; }
         public int Level { get; set; }
-        public int Race { get; set; }
-        public int Faction { get; set; }
-        public int Class { get; set; }
+        public string Race { get; set; }
+        public string Faction { get; set; }
+        public string Class { get; set; }
         public bool IsActive { get; set; }
     }
 }

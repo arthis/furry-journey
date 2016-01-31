@@ -3,25 +3,26 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using TechnicalTest.Domain.Model;
 
 namespace TechnicalTest.Domain.Core
 {
-    public interface ISpecification<TEntity,TResult>
+    public interface ISpecification<TEntity>
     {
-        bool IsSatisfiedBy(TEntity entity, TResult visitorResult);
+        bool IsSatisfiedBy(TEntity entity);
     }
 
-    public interface IConditionnalSpecification<TEntity, TResult>
+    public interface IConditionnalSpecification<TEntity>
     {
-        ISpecification<TEntity, TResult> Then(ISpecification<TEntity,TResult> thenSpecification);
+        ISpecification<TEntity> Then(ISpecification<TEntity> thenSpecification);
     }
 
-    internal class AndSpecification<TEntity, TResult> : ISpecification<TEntity, TResult>
+    internal class AndSpecification<TEntity> : ISpecification<TEntity>
     {
-        private readonly ISpecification<TEntity, TResult> _spec1;
-        private readonly ISpecification<TEntity, TResult> _spec2;
+        private readonly ISpecification<TEntity> _spec1;
+        private readonly ISpecification<TEntity> _spec2;
 
-        protected ISpecification<TEntity, TResult> Spec1
+        protected ISpecification<TEntity> Spec1
         {
             get
             {
@@ -29,7 +30,7 @@ namespace TechnicalTest.Domain.Core
             }
         }
 
-        protected ISpecification<TEntity, TResult> Spec2
+        protected ISpecification<TEntity> Spec2
         {
             get
             {
@@ -37,7 +38,7 @@ namespace TechnicalTest.Domain.Core
             }
         }
 
-        internal AndSpecification(ISpecification<TEntity, TResult> spec1, ISpecification<TEntity, TResult> spec2)
+        internal AndSpecification(ISpecification<TEntity> spec1, ISpecification<TEntity> spec2)
         {
             if (spec1 == null)
                 throw new ArgumentNullException("spec1");
@@ -49,19 +50,19 @@ namespace TechnicalTest.Domain.Core
             _spec2 = spec2;
         }
 
-        public bool IsSatisfiedBy(TEntity candidate, TResult visitorResult)
+        public bool IsSatisfiedBy(TEntity candidate)
         {
-            return Spec1.IsSatisfiedBy(candidate, visitorResult) && Spec2.IsSatisfiedBy(candidate, visitorResult);
+            return Spec1.IsSatisfiedBy(candidate) && Spec2.IsSatisfiedBy(candidate);
         }
 
     }
 
-    internal class OrSpecification<TEntity,TResult> : ISpecification<TEntity, TResult>
+    internal class OrSpecification<TEntity> : ISpecification<TEntity>
     {
-        private readonly ISpecification<TEntity, TResult> _spec1;
-        private readonly ISpecification<TEntity, TResult> _spec2;
+        private readonly ISpecification<TEntity> _spec1;
+        private readonly ISpecification<TEntity> _spec2;
 
-        protected ISpecification<TEntity, TResult> Spec1
+        protected ISpecification<TEntity> Spec1
         {
             get
             {
@@ -69,7 +70,7 @@ namespace TechnicalTest.Domain.Core
             }
         }
 
-        protected ISpecification<TEntity, TResult> Spec2
+        protected ISpecification<TEntity> Spec2
         {
             get
             {
@@ -77,7 +78,7 @@ namespace TechnicalTest.Domain.Core
             }
         }
 
-        internal OrSpecification(ISpecification<TEntity, TResult> spec1, ISpecification<TEntity, TResult> spec2)
+        internal OrSpecification(ISpecification<TEntity> spec1, ISpecification<TEntity> spec2)
         {
             if (spec1 == null)
                 throw new ArgumentNullException("spec1");
@@ -89,17 +90,17 @@ namespace TechnicalTest.Domain.Core
             _spec2 = spec2;
         }
 
-        public bool IsSatisfiedBy(TEntity candidate, TResult visitorResult)
+        public bool IsSatisfiedBy(TEntity candidate)
         {
-            return Spec1.IsSatisfiedBy(candidate,visitorResult) || Spec2.IsSatisfiedBy(candidate,visitorResult);
+            return Spec1.IsSatisfiedBy(candidate) || Spec2.IsSatisfiedBy(candidate);
         }
     }
 
-    internal class NotSpecification<TEntity, TResult> : ISpecification<TEntity, TResult>
+    internal class NotSpecification<TEntity> : ISpecification<TEntity>
     {
-        private readonly ISpecification<TEntity, TResult> _wrapped;
+        private readonly ISpecification<TEntity> _wrapped;
 
-        protected ISpecification<TEntity, TResult> Wrapped
+        protected ISpecification<TEntity> Wrapped
         {
             get
             {
@@ -107,7 +108,7 @@ namespace TechnicalTest.Domain.Core
             }
         }
 
-        internal NotSpecification(ISpecification<TEntity, TResult> spec)
+        internal NotSpecification(ISpecification<TEntity> spec)
         {
             if (spec == null)
             {
@@ -117,22 +118,22 @@ namespace TechnicalTest.Domain.Core
             _wrapped = spec;
         }
 
-        public bool IsSatisfiedBy(TEntity candidate, TResult visitorResult)
+        public bool IsSatisfiedBy(TEntity candidate)
         {
-            return !Wrapped.IsSatisfiedBy(candidate,visitorResult);
+            return !Wrapped.IsSatisfiedBy(candidate);
         }
     }
     
-    internal class AndIfSpecification<TEntity, TResult> : IConditionnalSpecification<TEntity, TResult>
+    internal class AndIfSpecification<TEntity> : IConditionnalSpecification<TEntity>
    { 
-        internal class ThenSpecification : ISpecification<TEntity, TResult>
+        internal class ThenSpecification : ISpecification<TEntity>
         {
             
-            private readonly ISpecification<TEntity, TResult> _andSpec;
-            private readonly ISpecification<TEntity, TResult> _ifSpec;
-            private readonly ISpecification<TEntity, TResult> _thenSpec;
+            private readonly ISpecification<TEntity> _andSpec;
+            private readonly ISpecification<TEntity> _ifSpec;
+            private readonly ISpecification<TEntity> _thenSpec;
 
-            protected ISpecification<TEntity, TResult> Spec1
+            protected ISpecification<TEntity> Spec1
             {
                 get
                 {
@@ -140,7 +141,7 @@ namespace TechnicalTest.Domain.Core
                 }
             }
 
-            protected ISpecification<TEntity, TResult> Spec2
+            protected ISpecification<TEntity> Spec2
             {
                 get
                 {
@@ -148,7 +149,7 @@ namespace TechnicalTest.Domain.Core
                 }
             }
 
-            protected ISpecification<TEntity, TResult> Spec3
+            protected ISpecification<TEntity> Spec3
             {
                 get
                 {
@@ -156,7 +157,7 @@ namespace TechnicalTest.Domain.Core
                 }
             }
 
-            internal ThenSpecification(ISpecification<TEntity, TResult> spec1, ISpecification<TEntity, TResult> spec2, ISpecification<TEntity, TResult> spec3)
+            internal ThenSpecification(ISpecification<TEntity> spec1, ISpecification<TEntity> spec2, ISpecification<TEntity> spec3)
             {
                 if (spec1 == null)
                     throw new ArgumentNullException("spec1");
@@ -172,19 +173,19 @@ namespace TechnicalTest.Domain.Core
                 _thenSpec = spec3;
             }
 
-            public bool IsSatisfiedBy(TEntity candidate, TResult visitorResult)
+            public bool IsSatisfiedBy(TEntity candidate)
             {
-                if  (Spec2.IsSatisfiedBy(candidate, visitorResult))
-                    return Spec1.IsSatisfiedBy(candidate, visitorResult) && Spec3.IsSatisfiedBy(candidate, visitorResult);
+                if  (Spec2.IsSatisfiedBy(candidate))
+                    return Spec1.IsSatisfiedBy(candidate) && Spec3.IsSatisfiedBy(candidate);
 
-                return Spec1.IsSatisfiedBy(candidate, visitorResult);
+                return Spec1.IsSatisfiedBy(candidate);
             }
         }
 
-        private readonly ISpecification<TEntity, TResult> _andSpec;
-        private readonly ISpecification<TEntity, TResult> _ifWrapped;
+        private readonly ISpecification<TEntity> _andSpec;
+        private readonly ISpecification<TEntity> _ifWrapped;
 
-        protected ISpecification<TEntity, TResult> AndSpec
+        protected ISpecification<TEntity> AndSpec
         {
             get
             {
@@ -192,7 +193,7 @@ namespace TechnicalTest.Domain.Core
             }
         }
 
-        protected ISpecification<TEntity, TResult> IfWrapped
+        protected ISpecification<TEntity> IfWrapped
         {
             get
             {
@@ -200,7 +201,7 @@ namespace TechnicalTest.Domain.Core
             }
         }
 
-        internal AndIfSpecification(ISpecification<TEntity, TResult> andSpec, ISpecification<TEntity, TResult> ifSpec)
+        internal AndIfSpecification(ISpecification<TEntity> andSpec, ISpecification<TEntity> ifSpec)
         {
             if (andSpec == null)
             {
@@ -216,7 +217,7 @@ namespace TechnicalTest.Domain.Core
         }
 
 
-        public ISpecification<TEntity, TResult> Then(ISpecification<TEntity, TResult> thenSpecification)
+        public ISpecification<TEntity> Then(ISpecification<TEntity> thenSpecification)
         {
             return new ThenSpecification( AndSpec, IfWrapped, thenSpecification);
         }
@@ -225,24 +226,24 @@ namespace TechnicalTest.Domain.Core
     
     public static class ExtensionMethods
     {
-        public static ISpecification<TEntity,TResult> And<TEntity,TResult>(this ISpecification<TEntity,TResult> spec1, ISpecification<TEntity, TResult> spec2)
+        public static ISpecification<TEntity> And<TEntity>(this ISpecification<TEntity> spec1, ISpecification<TEntity> spec2)
         {
-            return new AndSpecification<TEntity, TResult>(spec1, spec2);
+            return new AndSpecification<TEntity>(spec1, spec2);
         }
 
-        public static ISpecification<TEntity,TResult> Or<TEntity,TResult>(this ISpecification<TEntity, TResult> spec1, ISpecification<TEntity, TResult> spec2)
+        public static ISpecification<TEntity> Or<TEntity>(this ISpecification<TEntity> spec1, ISpecification<TEntity> spec2)
         {
-            return new OrSpecification<TEntity, TResult>(spec1, spec2);
+            return new OrSpecification<TEntity>(spec1, spec2);
         }
 
-        public static ISpecification<TEntity,TResult> Not<TEntity,TResult>(this ISpecification<TEntity, TResult> spec)
+        public static ISpecification<TEntity> Not<TEntity>(this ISpecification<TEntity> spec)
         {
-            return new NotSpecification<TEntity, TResult>(spec);
+            return new NotSpecification<TEntity>(spec);
         }
 
-        public static IConditionnalSpecification<TEntity, TResult> AndIf<TEntity,TResult>(this ISpecification<TEntity, TResult> andSpec, ISpecification<TEntity, TResult> conditionnalSpec)
+        public static IConditionnalSpecification<TEntity> AndIf<TEntity>(this ISpecification<TEntity> andSpec, ISpecification<TEntity> conditionnalSpec)
         {
-            return new AndIfSpecification<TEntity, TResult>(andSpec, conditionnalSpec);
+            return new AndIfSpecification<TEntity>(andSpec, conditionnalSpec);
         }
     }
 }

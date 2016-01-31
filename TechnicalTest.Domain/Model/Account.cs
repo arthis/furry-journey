@@ -11,20 +11,15 @@ namespace TechnicalTest.Domain.Model
 
     public class Account
     {
+
         public Guid Id { get; set; }
         public string Name { get; set; }
         public string Password { get; set; }
-
+        
         public List<Character> Characters { get; set; }
 
         public Task<ValidationResult> CreateCharacterAsync(string name, int level, Race race, Faction faction, Class @class)
         {
-            //if (race == "Human" && faction == "Hord")
-            //    return Task.FromResult(new ValidationResult()
-            //    {
-            //        IsOk = false,
-            //        Messages = new List<string>() { "Human do not belong to hord" }
-            //    });
 
             var newCharacter = new Character()
             {
@@ -34,12 +29,18 @@ namespace TechnicalTest.Domain.Model
                 Faction = faction,
                 Class = @class
             };
-            var validationResult = new ValidationResult() { IsOk = true };
 
-            AccountSpecifications.Factions
-            .And(AccountSpecifications.DruidSpecifications)
-            .And(AccountSpecifications.BloodElfSpecifications)
-            .IsSatisfiedBy(newCharacter, validationResult);
+            var validationResult = new ValidationResult()
+            {
+                    IsOk = CharacterSpecifications.Factions
+                            .And(CharacterSpecifications.DruidSpecifications)
+                            .And(CharacterSpecifications.BloodElfSpecifications)
+                            .IsSatisfiedBy(newCharacter)
+                            && AccountSpecifications.DeathKnightSpecifications(newCharacter)
+                            .IsSatisfiedBy(this)
+            };
+
+            Characters.Add(newCharacter);
 
             return Task.FromResult(validationResult);
         }

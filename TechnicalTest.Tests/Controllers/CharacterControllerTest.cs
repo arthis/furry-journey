@@ -26,7 +26,7 @@ namespace TechnicalTest.Tests
 
             var ds = new Dictionary<string, Account>() { { "wow", wowAccount }, { "wow2", wow2Account } };
 
-             return new SimpleRepoAccount(ds);
+            return new SimpleRepoAccount(ds);
         }
 
 
@@ -68,10 +68,10 @@ namespace TechnicalTest.Tests
             {
                 Id = Guid.NewGuid(),
                 Name = "Orgrim Doomhammer",
-                Class = (int)Class.Warrior,
-                Faction = (int)Faction.Horde,
+                Class = Class.Warrior.ToString(),
+                Faction = Faction.Horde.ToString(),
                 Level = 99,
-                Race = (int)Race.Orc
+                Race = Race.Orc.ToString()
             };
 
             // Act
@@ -83,7 +83,7 @@ namespace TechnicalTest.Tests
         }
 
         [Test]
-        public async Task Add_Validated_Character_To_Account()
+        public async Task Add_valid_character_to_account()
         {
             // Arrange
             IRepoAccount repoAccount = createFakeRepo();
@@ -98,10 +98,10 @@ namespace TechnicalTest.Tests
             {
                 Id = Guid.NewGuid(),
                 Name = "Orgrim Doomhammer",
-                Class = (int)Class.Warrior,
-                Faction = (int)Faction.Horde,
+                Class = Class.Warrior.ToString(),
+                Faction = Faction.Horde.ToString(),
                 Level = 99,
-                Race = (int)Race.Human
+                Race = Race.Orc.ToString()
             };
 
             // Act
@@ -109,7 +109,7 @@ namespace TechnicalTest.Tests
 
             // Assert
             Assert.IsNotNull(result);
-            Assert.IsFalse(result.IsOk);
+            Assert.IsTrue(result.IsOk);
         }
     }
 }

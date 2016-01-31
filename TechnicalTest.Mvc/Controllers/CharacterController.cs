@@ -6,8 +6,9 @@ using System.Web;
 using System.Web.Mvc;
 using TechnicalTest.Domain.Services;
 using TechnicalTest.Mvc.ActionFilters;
-using TechnicalTest.Mvc.Models.Commands;
 using TechnicalTest.Mvc.Models.Read;
+using TechnicalTest.Mvc.Models.Commands;
+
 
 namespace TechnicalTest.Mvc.Controllers
 {
@@ -35,9 +36,9 @@ namespace TechnicalTest.Mvc.Controllers
                 {
                     Name = x.Name,
                     Level = x.Level,
-                    Race = (int)x.Race,
-                    Faction = (int)x.Faction,
-                    Class = (int)x.Class,
+                    Race = x.Race.ToString(),
+                    Faction = x.Faction.ToString(),
+                    Class = x.Class.ToString(),
                 }
             );
         }
@@ -45,8 +46,14 @@ namespace TechnicalTest.Mvc.Controllers
         public async Task<TechnicalTest.Domain.Model.ValidationResult> CreateCharacterAsync(CreateCharacter cmd)
         {
             //todo validate that fields are not empty
+            Domain.Model.Faction faction = null;
+            var isSuccessFaction = Domain.Model.Faction.TryParse(cmd.Faction, out faction);
+            Domain.Model.Race race = null;
+            var isSuccessRace = Domain.Model.Race.TryParse(cmd.Race, out race);
+            Domain.Model.Class @class = null;
+            var isSuccessClass = Domain.Model.Class.TryParse(cmd.Class, out @class);
 
-            var result = await _serviceAccount.CreateCharacterAsync(cmd.Name,cmd.Level,cmd.Race,cmd.Faction,cmd.Class);
+            var result = await _serviceAccount.CreateCharacterAsync(cmd.Name,cmd.Level,race,faction, @class);
             return result;
         }
     }

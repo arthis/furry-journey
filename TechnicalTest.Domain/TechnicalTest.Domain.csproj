@@ -42,8 +42,11 @@
   <ItemGroup>
     <Compile Include="Core\ISpecification.cs" />
     <Compile Include="Model\Character.cs" />
-    <Compile Include="Model\DataTypes.cs" />
     <Compile Include="Model\AccountSpecifications.cs" />
+    <Compile Include="Model\Class.cs" />
+    <Compile Include="Model\CharacterSpecifications.cs" />
+    <Compile Include="Model\Faction.cs" />
+    <Compile Include="Model\Race.cs" />
     <Compile Include="Model\ValidationResult.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Repositories\RepoAccount.cs" />
