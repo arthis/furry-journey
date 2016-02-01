@@ -1,0 +1,37 @@
+﻿@model TechnicalTest.Mvc.Models.Read.CharacterListView
+
+<!-- container to render the list-->
+<ul class="character-list clearfix">
+</ul>
+
+<!-- datasource for the characters available on the page-->
+<script type="application/json" id="characters">@Html.Raw(Json.Encode(Model.Characters))</script>
+
+<!--template to render one character-->
+<script id="characterTemplate" type="text/html">
+    <li class="character">
+        <div>
+            <#= actions #>
+            <p class="name"><# =Name #></#></p>
+            <p class="level"><# =Level #></p>
+            <p class="race"><# =Race #></p>
+            <p class="class"><# =Class #></p>
+            <p class="faction"><# =Faction #></p>
+        </div>
+        <figure></figure>
+    </li>
+</script>
+
+<!--template to create one character-->
+<script id="createCharacterTemplate" type="text/html">
+    <li class="createCharacter">
+        <div>
+                <p class="name"><# =Name #></#></p>
+                <p class="level"><# =Level #></p>
+                <p class="race"><# =Race #></p>
+                <p class="class"><# =Class #></p>
+                <p class="faction"><# =Faction #></p>
+        </div>
+        <figure></figure>
+    </li>
+</script>

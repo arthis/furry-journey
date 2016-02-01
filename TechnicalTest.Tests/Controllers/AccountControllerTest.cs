@@ -12,7 +12,7 @@ using TechnicalTest.Mvc.Models.Commands;
 namespace TechnicalTest.Tests
 {
     [TestFixture]
-    public class CharacterControllerTest
+    public class AccountControllerTest
     {
         public IRepoAccount createFakeRepo()
         {
@@ -39,7 +39,7 @@ namespace TechnicalTest.Tests
             IServiceAccount serviceAccount = new ServiceAccount(repoAccount, saveUserToSession, getFromSession);
 
             serviceAccount.authenticate("wow", "wow");
-            CharacterController controller = new CharacterController(serviceAccount);
+            AccountController controller = new AccountController(serviceAccount);
 
             // Act
             var result = await controller.GetAsync();
@@ -61,7 +61,7 @@ namespace TechnicalTest.Tests
             IServiceAccount serviceAccount = new ServiceAccount(repoAccount, saveUserToSession, getFromSession);
 
             serviceAccount.authenticate("wow", "wow");
-            CharacterController controller = new CharacterController(serviceAccount);
+            AccountController controller = new AccountController(serviceAccount);
             var cmd = new CreateCharacter()
             {
                 Id = Guid.NewGuid(),
@@ -101,7 +101,7 @@ namespace TechnicalTest.Tests
             IServiceAccount serviceAccount = new ServiceAccount(repoAccount, saveUserToSession, getFromSession);
 
             serviceAccount.authenticate("wow", "wow");
-            CharacterController controller = new CharacterController(serviceAccount);
+            AccountController controller = new AccountController(serviceAccount);
             var cmd = new CreateCharacter()
             {
                 Id = id,
@@ -131,7 +131,7 @@ namespace TechnicalTest.Tests
             IServiceAccount serviceAccount = new ServiceAccount(repoAccount, saveUserToSession, getFromSession);
 
             serviceAccount.authenticate("wow", "wow");
-            CharacterController controller = new CharacterController(serviceAccount);
+            AccountController controller = new AccountController(serviceAccount);
             var cmd = new CreateCharacter()
             {
                 Id = Guid.NewGuid(),
@@ -161,7 +161,7 @@ namespace TechnicalTest.Tests
             IServiceAccount serviceAccount = new ServiceAccount(repoAccount, saveUserToSession, getFromSession);
 
             serviceAccount.authenticate("wow", "wow");
-            CharacterController controller = new CharacterController(serviceAccount);
+            AccountController controller = new AccountController(serviceAccount);
             var cmd = new CreateCharacter() {
                 Id = Guid.NewGuid(),
                 Name = "Orgrim Doomhammer",
@@ -193,7 +193,7 @@ namespace TechnicalTest.Tests
             IServiceAccount serviceAccount = new ServiceAccount(repoAccount, saveUserToSession, getFromSession);
 
             serviceAccount.authenticate("wow", "wow");
-            CharacterController controller = new CharacterController(serviceAccount);
+            AccountController controller = new AccountController(serviceAccount);
             var cmd = new CreateCharacter()
             {
                 Id = Guid.NewGuid(),
@@ -226,7 +226,7 @@ namespace TechnicalTest.Tests
             IServiceAccount serviceAccount = new ServiceAccount(repoAccount, saveUserToSession, getFromSession);
 
             serviceAccount.authenticate("wow", "wow");
-            CharacterController controller = new CharacterController(serviceAccount);
+            AccountController controller = new AccountController(serviceAccount);
             var cmd = new CreateCharacter()
             {
                 Id = Guid.NewGuid(),
@@ -260,7 +260,7 @@ namespace TechnicalTest.Tests
             IServiceAccount serviceAccount = new ServiceAccount(repoAccount, saveUserToSession, getFromSession);
 
             serviceAccount.authenticate("wow", "wow");
-            CharacterController controller = new CharacterController(serviceAccount);
+            AccountController controller = new AccountController(serviceAccount);
             var cmd = new CreateCharacter()
             {
                 Id = Guid.NewGuid(),

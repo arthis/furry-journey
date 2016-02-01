@@ -27,8 +27,8 @@ namespace TechnicalTest.Mvc
         {
             switch (controllerName)
             {
-                case "CharacterController":
-                    return new CharacterController(_serviceAccount);
+                case "Account":
+                    return new AccountController(_serviceAccount);
                 default:
                     return base.CreateController(requestContext, controllerName);
             }
@@ -50,9 +50,13 @@ namespace TechnicalTest.Mvc
             Func<Account> getFromSession = () => (Account)HttpContext.Current.Session["account"];
 
             var memoryDataSourceAccount = new Dictionary<string, Account>();
-            
+
             //sample initialization
+            var orgrimm = new Character() { Id = Guid.NewGuid(), Name = "Orgrim Doomhammer", Class = Class.Warrior, Faction = Faction.Horde, Level = 100, Race = Race.Orc };
+            var cairne = new Character() { Id = Guid.NewGuid(), Name = "Cairne Bloodhoof", Class = Class.Druid, Faction = Faction.Horde, Level = 100, Race = Race.Tauren };
             memoryDataSourceAccount.Add("wow", new Account() { Name = "wow", Password = "wow" });
+            memoryDataSourceAccount["wow"].Characters.Add(orgrimm);
+            memoryDataSourceAccount["wow"].Characters.Add(cairne);
 
             var repoAccount = new SimpleRepoAccount(memoryDataSourceAccount);
             var serviceAccount = new ServiceAccount(repoAccount, saveUserToSession,getFromSession);

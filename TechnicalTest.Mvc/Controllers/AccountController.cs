@@ -78,23 +78,23 @@ namespace TechnicalTest.Mvc.Controllers
             };
         }
     }
-
-
-
+    
     [BasicAuthentication]
-    public class CharacterController : Controller
+    public class AccountController : Controller
     {
         IServiceAccount _serviceAccount;
 
-        public CharacterController(IServiceAccount serviceAccount)
+        public AccountController(IServiceAccount serviceAccount)
         {
             if (serviceAccount == null) throw new Exception("serviceAccount cannot be null");
             _serviceAccount = serviceAccount;
         }
 
-        public ActionResult Index()
+        public async Task<ActionResult> Index()
         {
-            return View();
+            var characters = await GetAsync();
+            var viewModel = new CharacterListView() { Characters = characters };
+            return View(viewModel);
         }
 
         public async Task<IEnumerable<Character>> GetAsync()

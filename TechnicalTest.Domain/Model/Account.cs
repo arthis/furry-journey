@@ -8,7 +8,6 @@ using TechnicalTest.Domain.Core;
 namespace TechnicalTest.Domain.Model
 {
     
-
     public class Account
     {
 
@@ -17,6 +16,11 @@ namespace TechnicalTest.Domain.Model
         public string Password { get; set; }
         
         public List<Character> Characters { get; set; }
+
+        public Account()
+        {
+            Characters = new List<Character>();
+        }
 
         public bool CreateCharacter(string name, int level, Race race, Faction faction, Class @class)
         {

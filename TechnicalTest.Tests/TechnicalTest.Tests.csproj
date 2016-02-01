@@ -41,7 +41,7 @@
     <Reference Include="System" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Controllers\CharacterControllerTest.cs" />
+    <Compile Include="Controllers\AccountControllerTest.cs" />
     <Compile Include="Domain\AccountTest.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Repositories\RepoAccountTests.cs" />
@@ -60,6 +60,9 @@
       <Project>{2d8a1a6c-6220-4e67-9346-206c740f0e28}</Project>
       <Name>TechnicalTest.Mvc</Name>
     </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Client\" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it.
