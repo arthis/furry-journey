@@ -8,19 +8,19 @@ namespace TechnicalTest.Mvc
 {
     public class FilterConfig
     {
-        private IServiceAccount _serviceAccount;
+        private IServiceUser _serviceUser;
 
-        public FilterConfig(IServiceAccount serviceAccount)
+        public FilterConfig(IServiceUser serviceUser)
         {
-            if (serviceAccount == null) throw new ArgumentNullException("serviceAccount cannot be null");
+            if (serviceUser == null) throw new ArgumentNullException("serviceUser cannot be null");
 
-            _serviceAccount = serviceAccount;
+            _serviceUser = serviceUser;
         }
 
         public void RegisterGlobalFilters(GlobalFilterCollection filters)
         {
             filters.Add(new HandleErrorAttribute());
-            filters.Add(new BasicAuthenticationFilter(_serviceAccount));
+            filters.Add(new BasicAuthenticationFilter(_serviceUser));
         }
     }
 }

@@ -7,10 +7,8 @@ using TechnicalTest.Domain.Model;
 
 namespace TechnicalTest.Domain.Repositories
 {
-    public interface IRepoAccount
+    public interface IRepoUser
     {
-        Task<IEnumerable<Character>> GetCharactersAsync(Guid accountId);
-        Task<Account> GetByIdAsync(Guid id);
-        Task<bool> SaveAsync(Account account);
+        User Get(string username);
     }
 }

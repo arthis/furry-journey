@@ -45,6 +45,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Core\ISpecification.cs" />
+    <Compile Include="Core\JsonConverter.cs" />
     <Compile Include="Core\ValueObject.cs" />
     <Compile Include="Model\Character.cs" />
     <Compile Include="Model\AccountSpecifications.cs" />
@@ -52,14 +53,18 @@
     <Compile Include="Model\CharacterSpecifications.cs" />
     <Compile Include="Model\Faction.cs" />
     <Compile Include="Model\Race.cs" />
-    <Compile Include="Model\Session.cs" />
+    <Compile Include="Model\User.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Repositories\FileSystemRepoAccount.cs" />
+    <Compile Include="Repositories\IRepoUser.cs" />
     <Compile Include="Repositories\MemoryRepoAccount.cs" />
     <Compile Include="Repositories\IRepoAccount.cs" />
+    <Compile Include="Repositories\MemoryRepoUser.cs" />
     <Compile Include="Services\IServiceAccount.cs" />
+    <Compile Include="Services\IServiceUser.cs" />
     <Compile Include="Services\ServiceAccount.cs" />
     <Compile Include="Model\Account.cs" />
+    <Compile Include="Services\ServiceUser.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />

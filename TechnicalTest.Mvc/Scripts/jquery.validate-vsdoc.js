@@ -855,7 +855,7 @@ $.extend($.validator, {
 	addClassRules: function(className, rules) {
 		/// <summary>
 		/// Add a compound class method - useful to refactor common combinations of rules into a single
-		/// ClassFactory.
+		/// class.
 		/// </summary>
 		/// <param name="name" type="String">
 		/// The name of the class rule to add

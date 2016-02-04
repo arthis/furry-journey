@@ -63,7 +63,7 @@
 
         var hasLevel55Character = $.grep(characters, function (e) { return e.Level >= 55; });
 
-        var formAddNewCharacter = new addNewCharacter.createForm(hasLevel55Character);
+        var formAddNewCharacter = new addNewCharacter.createForm(hasLevel55Character.length>0);
 
         formAddNewCharacter.displayCharacterForm();
 

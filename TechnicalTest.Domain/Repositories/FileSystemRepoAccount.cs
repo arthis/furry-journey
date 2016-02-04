@@ -38,18 +38,7 @@ namespace TechnicalTest.Domain.Repositories
             }
         }
 
-        private async Task<Account> hydrateAggregateAsync(Guid id)
-        {
-            var dataDirectory = getdbPath();
-            var dataFileFullPath = string.Format(@"{0}\{1}", dataDirectory, getDataFileName("account", id));
-
-            if (!Directory.Exists(dataDirectory)) Directory.CreateDirectory(dataDirectory);
-            var data = await ReadAllFileAsync(dataFileFullPath);
-
-            return JsonConvert.DeserializeObject<Account>(data);
-        }
-
-        private async Task<bool> saveAsync(Guid id, string data)
+        private async Task<bool> saveToFileAsync(Guid id, string data)
         {
 
             var dataDirectory = getdbPath();
@@ -66,41 +55,38 @@ namespace TechnicalTest.Domain.Repositories
         }
 
         //create the repo and populate the datasource of known accounts
-        public FileSystemRepoAccount(Dictionary<string, Account> usersKnown)
+        public FileSystemRepoAccount()
         {
-            if (usersKnown == null) throw new ArgumentNullException("usersKnown cannot be null");
-            _dataSourceUsers = usersKnown;
-
-            foreach ( string fileName in Directory.EnumerateFiles(getdbPath()))
-            {
-                var data = ReadAllFileAsync(fileName).Result;
-                var account = JsonConvert.DeserializeObject<Account>(data);
-                _dataSourceUsers.Add(account.Name, account);
-            };
         }
 
-
-        public Account Get(string username)
-        {
-            return _dataSourceUsers[username];
-        }
 
         public async Task<IEnumerable<Character>> GetCharactersAsync(Guid accountId)
         {
-            var a = await hydrateAggregateAsync(accountId);
+            var a = await GetByIdAsync(accountId);
             return a.Characters;
         }
 
-        public Account GetById(Guid id)
+        public async Task<Account> GetByIdAsync(Guid id)
         {
-            //todo ugly stuff
-            Func<KeyValuePair<string, Account>, bool> predicat = x => x.Value.Id == id;
-            return _dataSourceUsers.Any(predicat) ? _dataSourceUsers.Single(predicat).Value : null;
+            var dataDirectory = getdbPath();
+            var dataFileFullPath = string.Format(@"{0}\{1}", dataDirectory, getDataFileName("account", id));
+
+            if (!Directory.Exists(dataDirectory)) Directory.CreateDirectory(dataDirectory);
+
+            if (!File.Exists(dataFileFullPath))
+                return new Account() { Id = id }; 
+            
+            
+            var data = await ReadAllFileAsync(dataFileFullPath);
+            return JsonConvert.DeserializeObject<Account>(data);
+
         }
 
         public Task<bool> SaveAsync(Account account)
         {
-            throw new NotImplementedException();
+            var data = JsonConvert.SerializeObject(account);
+
+            return saveToFileAsync(account.Id, data);
         }
     }
 }

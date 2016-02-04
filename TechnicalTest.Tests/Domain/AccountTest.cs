@@ -19,7 +19,7 @@ namespace TechnicalTest.Tests
         public void remove_an_active_character_from_an_account()
         {
             //arrange 
-            var newAccount = new Account() { Id = Guid.NewGuid(), Name = "wow", Password = "wow", Characters = new List<Character>() };
+            var newAccount = new Account() { Id = Guid.NewGuid(),  Characters = new List<Character>() };
             newAccount.AddNewCharacter(Guid.NewGuid(), "Orgrim Doomhammer", 100, RaceFactory.Orc, FactionFactory.Horde, ClassFactory.Warrior);
             var idCharacter = newAccount.Characters[0].Id;
             // Act
@@ -35,7 +35,7 @@ namespace TechnicalTest.Tests
         public void remove_an_inactive_character_from_an_account()
         {
             //arrange 
-            var newAccount = new Account() { Id = Guid.NewGuid(), Name = "wow", Password = "wow", Characters = new List<Character>() };
+            var newAccount = new Account() { Id = Guid.NewGuid(),  Characters = new List<Character>() };
             newAccount.AddNewCharacter(Guid.NewGuid(), "Orgrim Doomhammer", 100, RaceFactory.Orc, FactionFactory.Horde, ClassFactory.Warrior);
             var idCharacter = newAccount.Characters[0].Id;
             newAccount.RemoveCharacter(idCharacter);
@@ -52,7 +52,7 @@ namespace TechnicalTest.Tests
         public void retrieve_a_inactive_character_from_an_account()
         {
             //arrange 
-            var newAccount = new Account() { Id = Guid.NewGuid(), Name = "wow", Password = "wow", Characters = new List<Character>() };
+            var newAccount = new Account() { Id = Guid.NewGuid(),  Characters = new List<Character>() };
             newAccount.AddNewCharacter(Guid.NewGuid(), "Orgrim Doomhammer", 100, RaceFactory.Orc, FactionFactory.Horde, ClassFactory.Warrior);
             var idCharacter = newAccount.Characters[0].Id;
             newAccount.RemoveCharacter(idCharacter);
@@ -70,7 +70,7 @@ namespace TechnicalTest.Tests
         public void retrieve_a_active_character_from_an_account()
         {
             //arrange 
-            var newAccount = new Account() { Id = Guid.NewGuid(), Name = "wow", Password = "wow", Characters = new List<Character>() };
+            var newAccount = new Account() { Id = Guid.NewGuid(),  Characters = new List<Character>() };
             newAccount.AddNewCharacter(Guid.NewGuid(), "Orgrim Doomhammer", 100, RaceFactory.Orc, FactionFactory.Horde, ClassFactory.Warrior);
             var idCharacter = newAccount.Characters[0].Id;
 
@@ -87,7 +87,7 @@ namespace TechnicalTest.Tests
         public void remove_an_character_from_an_empty_account()
         {
             //arrange 
-            var newAccount = new Account() { Id = Guid.NewGuid(), Name = "wow", Password = "wow", Characters = new List<Character>() };
+            var newAccount = new Account() { Id = Guid.NewGuid(),  Characters = new List<Character>() };
             var idCharacter = Guid.NewGuid();
             // Act
             var result = newAccount.RemoveCharacter(idCharacter);
@@ -102,7 +102,7 @@ namespace TechnicalTest.Tests
         public void create_a_valid_character_on_an_empty_account()
         {
             // Arrange
-            var wowAccount = new Account() { Id = Guid.NewGuid(), Name = "wow", Password = "wow", Characters = new List<Character>() { } };
+            var wowAccount = new Account() { Id = Guid.NewGuid(),  Characters = new List<Character>() { } };
 
             // Act
             var result = wowAccount.AddNewCharacter(Guid.NewGuid(), "Cairne Bloodhoof", 100, RaceFactory.Tauren, FactionFactory.Horde, ClassFactory.Druid);
@@ -123,7 +123,7 @@ namespace TechnicalTest.Tests
         public void Orc_Tauren_and_Blood_Elves_belong_to_the_Horde(string name, int level, Race race, Faction faction, Class @class)
         {
             //arrange 
-            var newAccount = new Account() { Id = Guid.NewGuid(), Name = "wow", Password = "wow", Characters = new List<Character>() };
+            var newAccount = new Account() { Id = Guid.NewGuid(),  Characters = new List<Character>() };
 
             // Act
             var result = newAccount.AddNewCharacter(Guid.NewGuid(),name , level, race, faction, @class);
@@ -144,7 +144,7 @@ namespace TechnicalTest.Tests
         public void Orc_Tauren_and_Blood_Elves_do_not_belong_to_the_Alliance(string name, int level, Race race, Faction faction, Class @class)
         {
             //arrange 
-            var newAccount = new Account() { Id = Guid.NewGuid(), Name = "wow", Password = "wow", Characters = new List<Character>() };
+            var newAccount = new Account() { Id = Guid.NewGuid(),  Characters = new List<Character>() };
 
             // Act
             var result = newAccount.AddNewCharacter(Guid.NewGuid(),name , level, race, faction, @class);
@@ -164,7 +164,7 @@ namespace TechnicalTest.Tests
         public void Human_Gnome_and_Worgen_belong_to_the_Alliance(string name, int level, Race race, Faction faction, Class @class)
         {
             //arrange 
-            var newAccount = new Account() { Id = Guid.NewGuid(), Name = "wow", Password = "wow", Characters = new List<Character>() };
+            var newAccount = new Account() { Id = Guid.NewGuid(),  Characters = new List<Character>() };
 
             // Act
             var result = newAccount.AddNewCharacter(Guid.NewGuid(),name , level, race, faction, @class);
@@ -184,7 +184,7 @@ namespace TechnicalTest.Tests
         public void Human_Gnome_and_Worgen_do_not_belong_to_the_Horde(string name, int level, Race race, Faction faction, Class @class)
         {
             //arrange 
-            var newAccount = new Account() { Id = Guid.NewGuid(), Name = "wow", Password = "wow", Characters = new List<Character>() };
+            var newAccount = new Account() { Id = Guid.NewGuid(),  Characters = new List<Character>() };
 
             // Act
             var result = newAccount.AddNewCharacter(Guid.NewGuid(),name , level, race, faction, @class);
@@ -203,7 +203,7 @@ namespace TechnicalTest.Tests
         public void Worgen_and_Tauren_can_be_druid(string name, int level, Race race, Faction faction, Class @class)
         {
             //arrange 
-            var newAccount = new Account() { Id = Guid.NewGuid(), Name = "wow", Password = "wow", Characters = new List<Character>() };
+            var newAccount = new Account() { Id = Guid.NewGuid(),  Characters = new List<Character>() };
 
             // Act
             var result = newAccount.AddNewCharacter(Guid.NewGuid(),name , level, race, faction, @class);
@@ -224,7 +224,7 @@ namespace TechnicalTest.Tests
         public void Human_Gnome_Orc_and_BloodElves_cannot_be_druid(string name, int level, Race race, Faction faction, Class @class)
         {
             //arrange 
-            var newAccount = new Account() { Id = Guid.NewGuid(), Name = "wow", Password = "wow", Characters = new List<Character>() };
+            var newAccount = new Account() { Id = Guid.NewGuid(),  Characters = new List<Character>() };
 
             // Act
             var result = newAccount.AddNewCharacter(Guid.NewGuid(),name , level, race, faction, @class);
@@ -242,7 +242,7 @@ namespace TechnicalTest.Tests
         public void BloodElves_cannot_be_warrior(string name, int level, Race race, Faction faction, Class @class)
         {
             //arrange 
-            var newAccount = new Account() { Id = Guid.NewGuid(), Name = "wow", Password = "wow", Characters = new List<Character>() };
+            var newAccount = new Account() { Id = Guid.NewGuid(),  Characters = new List<Character>() };
 
             // Act
             var result = newAccount.AddNewCharacter(Guid.NewGuid(),name , level, race, faction, @class);
@@ -265,7 +265,7 @@ namespace TechnicalTest.Tests
         public void Except_BloodElves_all_can_be_warrior(string name, int level, Race race, Faction faction, Class @class)
         {
             //arrange 
-            var newAccount = new Account() { Id = Guid.NewGuid(), Name = "wow", Password = "wow", Characters = new List<Character>() };
+            var newAccount = new Account() { Id = Guid.NewGuid(),  Characters = new List<Character>() };
 
             // Act
             var result = newAccount.AddNewCharacter(Guid.NewGuid(),name , level, race, faction, @class);
@@ -283,7 +283,7 @@ namespace TechnicalTest.Tests
         public void when_account_has_not_one_lvl_55__then_it_cannot_create_death_knight(string name, int level, Race race, Faction faction, Class @class)
         {
             //arrange 
-            var newAccount = new Account() { Id = Guid.NewGuid(), Name = "wow", Password = "wow", Characters = new List<Character>() };
+            var newAccount = new Account() { Id = Guid.NewGuid(),  Characters = new List<Character>() };
 
             // Act
             var result = newAccount.AddNewCharacter(Guid.NewGuid(),name , level, race, faction, @class);
@@ -301,7 +301,7 @@ namespace TechnicalTest.Tests
         public void when_account_has_one_lvl_55__then_it_can_create_death_knight(string name, int level, Race race, Faction faction, Class @class)
         {
             //arrange 
-            var newAccount = new Account() { Id = Guid.NewGuid(), Name = "wow", Password = "wow", Characters = new List<Character>() };
+            var newAccount = new Account() { Id = Guid.NewGuid(),  Characters = new List<Character>() };
             newAccount.AddNewCharacter(Guid.NewGuid(), "Cairne Bloodhoof", 100, RaceFactory.Tauren, FactionFactory.Horde, ClassFactory.Druid);
 
             // Act

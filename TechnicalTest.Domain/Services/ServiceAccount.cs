@@ -10,49 +10,25 @@ namespace TechnicalTest.Domain.Services
 {
     public class ServiceAccount : IServiceAccount
     {
-        Action<Account> _saveUserToSession;
-        Func<Account> _getFromSession;
         IRepoAccount _repoAccount;
 
-        public ServiceAccount(IRepoAccount repoAccount , Action<Account> saveUserToSession, Func<Account> getFromSession)
+        public ServiceAccount(IRepoAccount repoAccount)
         {
-            if (saveUserToSession == null) throw new ArgumentNullException("saveUserToSession cannot be null");
-            if (getFromSession == null) throw new ArgumentNullException("getFromSession cannot be null");
             if (repoAccount == null) throw new ArgumentNullException("repoAccount cannot be null");
 
             _repoAccount = repoAccount;
-            _saveUserToSession = saveUserToSession;
-            _getFromSession = getFromSession;
         }
 
-        public bool authenticate(string username, string password)
+
+        public async Task<IEnumerable<Character>> GetCharactersAsync(Guid accountId)
         {
-            var account = _repoAccount.Get(username);
-            if (account != null && account.Password == password)
-            {
-                _saveUserToSession(account);
-                return true;
-            }
-            return false;
+            return await _repoAccount.GetCharactersAsync(accountId);
         }
 
-        public Account getCurrentAccount()
+        public async Task<bool> CreateCharacterAsync(Guid accountId, Guid id, string name, int level, Race race, Faction faction, Class @class)
         {
-            return _getFromSession();
-        }
 
-        public async Task<IEnumerable<Character>> GetCharactersAsync()
-        {
-            var currentSession = _getFromSession();
-
-            return await _repoAccount.GetCharactersAsync(currentSession.Id);
-        }
-
-        public async Task<bool> CreateCharacterAsync(Guid id, string name, int level, Race race, Faction faction, Class @class)
-        {
-            var currentSession = _getFromSession();
-
-            var account = _repoAccount.GetById(currentSession.Id);
+            var account = await _repoAccount.GetByIdAsync(accountId);
 
             if (account.AddNewCharacter(id,name, level, race, faction, @class))
                 return await _repoAccount.SaveAsync(account);
@@ -60,11 +36,9 @@ namespace TechnicalTest.Domain.Services
                 return await Task.FromResult(false);
         }
 
-        public async Task<bool> RemoveCharacterAsync(Guid idCharacter)
+        public async Task<bool> RemoveCharacterAsync(Guid accountId, Guid idCharacter)
         {
-            var currentSession = _getFromSession();
-
-            var account = _repoAccount.GetById(currentSession.Id);
+            var account = await _repoAccount.GetByIdAsync(accountId);
 
             if (account.RemoveCharacter(idCharacter))
                 return await _repoAccount.SaveAsync(account);
@@ -72,11 +46,9 @@ namespace TechnicalTest.Domain.Services
                 return await Task.FromResult(false);
         }
 
-        public async Task<bool> RetrieveCharacterAsync(Guid idCharacter)
+        public async Task<bool> RetrieveCharacterAsync(Guid accountId, Guid idCharacter)
         {
-            var currentSession = _getFromSession();
-
-            var account = _repoAccount.GetById(currentSession.Id);
+            var account = await _repoAccount.GetByIdAsync(accountId);
 
             if (account.RetrieveCharacter(idCharacter))
                 return await _repoAccount.SaveAsync(account);

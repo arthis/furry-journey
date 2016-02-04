@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Newtonsoft.Json;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -11,8 +12,10 @@ namespace TechnicalTest.Domain.Model
     /// <summary>
     /// value object immutable describing the class of a character
     /// </summary>
+    [JsonConverter(typeof(ToStringJsonConverter))]
     public class Class : ValueObject<string>
     {
+        [JsonConstructor]
         public Class(string value) : base(value)
         {
 

@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Newtonsoft.Json;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -10,8 +11,10 @@ namespace TechnicalTest.Domain.Model
     /// <summary>
     /// value object immutable describing the faction of a character
     /// </summary>
+    [JsonConverter(typeof(ToStringJsonConverter))]
     public class Faction : ValueObject<string>
     {
+        [JsonConstructor]
         public Faction(string value) : base(value)
         {
 

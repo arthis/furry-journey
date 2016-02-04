@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Newtonsoft.Json;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -6,10 +7,12 @@ using System.Threading.Tasks;
 
 namespace TechnicalTest.Domain.Core
 {
+    
     public class ValueObject<T> 
     {
         private T _value;
 
+        
         public ValueObject(T value)
         {
             if (value== null) throw new ArgumentNullException("value cannot be null");

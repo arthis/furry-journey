@@ -9,12 +9,10 @@ namespace TechnicalTest.Domain.Services
 {
     public interface IServiceAccount
     {
-        bool authenticate(string username, string password);
-        Account getCurrentAccount();
-        Task<IEnumerable<Character>> GetCharactersAsync();
-        Task<bool> CreateCharacterAsync(Guid id, string name, int level, Race race, Faction faction, Class @class);
-        Task<bool> RemoveCharacterAsync(Guid idCharacter);
-        Task<bool> RetrieveCharacterAsync(Guid idCharacter);
+        Task<IEnumerable<Character>> GetCharactersAsync(Guid accountId);
+        Task<bool> CreateCharacterAsync(Guid accountId, Guid id, string name, int level, Race race, Faction faction, Class @class);
+        Task<bool> RemoveCharacterAsync(Guid accountId, Guid idCharacter);
+        Task<bool> RetrieveCharacterAsync(Guid accountId, Guid idCharacter);
         
     }
 }

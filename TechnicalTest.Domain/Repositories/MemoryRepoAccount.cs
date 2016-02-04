@@ -9,38 +9,41 @@ namespace TechnicalTest.Domain.Repositories
 {
     public class MemoryRepoAccount : IRepoAccount
     {
-        Dictionary<string, Account> _dataSource;
+        Dictionary<Guid, Account> _dataSource;
+        readonly object _loker = new Object();
 
-        public MemoryRepoAccount(Dictionary<string,Account> dataSource)
+        public MemoryRepoAccount(Dictionary<Guid,Account> dataSource)
         {
             if (dataSource == null) throw new ArgumentNullException("dataSource cannot be null");
 
             _dataSource = dataSource;
         }
 
-        public Account Get(string username)
+        public Task<Account> GetByIdAsync(Guid id)
         {
-            return _dataSource[username];
+            lock (_loker)
+            {
+                if (!_dataSource.ContainsKey(id))
+                {
+                    _dataSource.Add(id, new Account() { Id = id});
+                }
+            }
+            
+            return Task.FromResult(_dataSource[id]);
         }
 
-        public Account GetById(Guid id)
+        public async Task<IEnumerable<Character>> GetCharactersAsync(Guid accountId)
         {
-            //todo ugly stuff
-            Func< KeyValuePair < string,Account >,bool> predicat =  x => x.Value.Id == id;
-            return _dataSource.Any(predicat) ? _dataSource.Single(predicat).Value: null;
-        }
+            var account = await GetByIdAsync(accountId);
 
-        public Task<IEnumerable<Character>> GetCharactersAsync(Guid accountId)
-        {
-            var account = GetById(accountId);
-
-            return Task.FromResult(account.Characters.AsEnumerable());
+            return account.Characters.AsEnumerable();
         }
 
         public async Task<bool> SaveAsync(Account account)
         {
+            //fictious delay to get the answer
             await Task.Delay(100);
-            return await Task.FromResult(true);
+            return true;
         }
     }
 }

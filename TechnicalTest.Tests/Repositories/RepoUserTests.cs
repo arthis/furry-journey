@@ -11,14 +11,14 @@ using TechnicalTest.Domain.Model;
 namespace TechnicalTest.Tests.Repositories
 {
     [TestFixture]
-    public class RepoAccountTests
+    public class RepoUserTests
     {
         [Test]
         public void Authenticate()
         {
-            var expecteUser = new Account() { Name = "wow", Password = "wow" };
-            var ds = new Dictionary<string, Account>() { { "wow", expecteUser } };
-            IRepoAccount repo = new MemoryRepoAccount(ds);
+            var expecteUser = new User() { Name = "wow", Password = "wow" };
+            var ds = new Dictionary<string, User>() { { "wow", expecteUser } };
+            IRepoUser repo = new MemoryRepoUser(ds);
 
             var result = repo.Get("wow");
 

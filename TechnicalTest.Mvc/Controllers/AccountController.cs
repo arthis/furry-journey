@@ -82,11 +82,15 @@ namespace TechnicalTest.Mvc.Controllers
     [BasicAuthentication]
     public class AccountController : Controller
     {
+        IServiceUser _serviceUser;
         IServiceAccount _serviceAccount;
 
-        public AccountController(IServiceAccount serviceAccount)
+        public AccountController(IServiceUser serviceUser,  IServiceAccount serviceAccount)
         {
             if (serviceAccount == null) throw new ArgumentNullException("serviceAccount cannot be null");
+            if (serviceUser == null) throw new ArgumentNullException("serviceUser cannot be null");
+
+            _serviceUser = serviceUser;
             _serviceAccount = serviceAccount;
         }
 
@@ -99,7 +103,8 @@ namespace TechnicalTest.Mvc.Controllers
 
         public async Task<IEnumerable<Character>> GetAsync()
         {
-            var result = await _serviceAccount.GetCharactersAsync();
+            var currentUser = _serviceUser.getCurrentUser();
+            var result = await _serviceAccount.GetCharactersAsync(currentUser.Id);
             return result.Select(x =>
                 new Character()
                 {
@@ -135,7 +140,8 @@ namespace TechnicalTest.Mvc.Controllers
                 return Json(cmdValidation.ToResponse());
             else
             {
-                var result = await _serviceAccount.CreateCharacterAsync(cmd.Id, cmd.Name, cmd.Level, race, faction, @class);
+                var currentUser = _serviceUser.getCurrentUser();
+                var result = await _serviceAccount.CreateCharacterAsync(currentUser.Id, cmd.Id, cmd.Name, cmd.Level, race, faction, @class);
                 var executionResult = new ExecutionValidation(result );
                 //todo give back some 4/5xx love if it failed?
                 return Json(executionResult.ToResponse());
@@ -155,7 +161,8 @@ namespace TechnicalTest.Mvc.Controllers
                 return Json( cmdValidation.ToResponse());
             else
             {
-                var result = await _serviceAccount.RemoveCharacterAsync(cmd.Id);
+                var currentUser = _serviceUser.getCurrentUser();
+                var result = await _serviceAccount.RemoveCharacterAsync(currentUser.Id, cmd.Id);
 
                 var executionResult = new ExecutionValidation(result);
                 //todo give back some 4/5xx love if it failed?
@@ -175,7 +182,8 @@ namespace TechnicalTest.Mvc.Controllers
                 return Json( cmdValidation.ToResponse());
             else
             {
-                var result = await _serviceAccount.RetrieveCharacterAsync(cmd.Id);
+                var currentUser = _serviceUser.getCurrentUser();
+                var result = await _serviceAccount.RetrieveCharacterAsync(currentUser.Id, cmd.Id);
 
                 var executionResult = new ExecutionValidation(result);
                 //todo give back some 4/5xx love if it failed?

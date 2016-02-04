@@ -18,17 +18,22 @@ namespace TechnicalTest.Mvc
     public class PoorManControllerFactory : DefaultControllerFactory
     {
         IServiceAccount _serviceAccount;
-        public PoorManControllerFactory(IServiceAccount serviceAccount)
+        IServiceUser _serviceUser;
+
+        public PoorManControllerFactory(IServiceUser serviceUser, IServiceAccount serviceAccount)
         {
+            if (serviceUser == null) throw new ArgumentNullException("serviceUser cannot be null");
             if (serviceAccount == null) throw new ArgumentNullException("serviceAccount cannot be null");
+
             _serviceAccount = serviceAccount;
+            _serviceUser = serviceUser;
         }
         public override IController CreateController(RequestContext requestContext, string controllerName)
         {
             switch (controllerName)
             {
                 case "Account":
-                    return new AccountController(_serviceAccount);
+                    return new AccountController(_serviceUser, _serviceAccount);
                 default:
                     return base.CreateController(requestContext, controllerName);
             }
@@ -42,32 +47,33 @@ namespace TechnicalTest.Mvc
         {
             
 
-            Action<Account> saveUserToSession = (account) =>
+            Action<User> saveUserToSession = (account) =>
             {
-                HttpContext.Current.Session.Remove("account");
-                HttpContext.Current.Session.Add("account", account);
+                HttpContext.Current.Session.Remove("User");
+                HttpContext.Current.Session.Add("User", account);
             };
-            Func<Account> getFromSession = () => (Account)HttpContext.Current.Session["account"];
+            Func<User> getFromSession = () => (User)HttpContext.Current.Session["User"];
 
-            var memoryDataSourceAccount = new Dictionary<string, Account>();
+            var memoryDataSourceUser = new Dictionary<string, User>();
 
             //sample initialization
-            var orgrimm = new Character() { Id = Guid.NewGuid(), Name = "Orgrim Doomhammer", Class = ClassFactory.Warrior, Faction = FactionFactory.Horde, Level = 100, Race = RaceFactory.Orc };
-            var cairne = new Character() { Id = Guid.NewGuid(), Name = "Cairne Bloodhoof", Class = ClassFactory.Druid, Faction = FactionFactory.Horde, Level = 100, Race = RaceFactory.Tauren };
-            memoryDataSourceAccount.Add("wow", new Account() { Name = "wow", Password = "wow" });
-            memoryDataSourceAccount["wow"].Characters.Add(orgrimm);
-            memoryDataSourceAccount["wow"].Characters.Add(cairne);
+            memoryDataSourceUser.Add("wow", new User() { Id = Guid.Parse("537c8609-ddbe-434f-9e74-b2f55b9a35da"),  Name = "wow", Password = "wow" });
+            memoryDataSourceUser.Add("wah", new User() { Id = Guid.Parse("2939c3e6-0ee6-4167-a8aa-f5e95e58edee"),  Name = "wah", Password = "wah" }); 
+            
 
-            var repoAccount = new MemoryRepoAccount(memoryDataSourceAccount);
-            var serviceAccount = new ServiceAccount(repoAccount, saveUserToSession,getFromSession);
+            //var repoAccount = new MemoryRepoAccount(new Dictionary<Guid, Account>());
+            var repoAccount = new FileSystemRepoAccount();
+            var serviceAccount = new ServiceAccount(repoAccount);
 
-            var filterConfig = new FilterConfig(serviceAccount);
+            var repoUser = new MemoryRepoUser(memoryDataSourceUser);
+            var serviceUser = new ServiceUser(repoUser, saveUserToSession, getFromSession);
 
-            var controllerFactory = new PoorManControllerFactory(serviceAccount);
+            var filterConfig = new FilterConfig(serviceUser);
+
+            var controllerFactory = new PoorManControllerFactory(serviceUser,serviceAccount);
             ControllerBuilder.Current.SetControllerFactory(controllerFactory);
 
             AreaRegistration.RegisterAllAreas();
-            GlobalConfiguration.Configure(WebApiConfig.Register);
             filterConfig.RegisterGlobalFilters(GlobalFilters.Filters);
             RouteConfig.RegisterRoutes(RouteTable.Routes);
             BundleConfig.RegisterBundles(BundleTable.Bundles);
