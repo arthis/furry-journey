@@ -20,7 +20,7 @@ namespace TechnicalTest.Mvc
         IServiceAccount _serviceAccount;
         public PoorManControllerFactory(IServiceAccount serviceAccount)
         {
-            if (serviceAccount == null) throw new Exception("serviceAccount cannot be null");
+            if (serviceAccount == null) throw new ArgumentNullException("serviceAccount cannot be null");
             _serviceAccount = serviceAccount;
         }
         public override IController CreateController(RequestContext requestContext, string controllerName)
@@ -52,13 +52,13 @@ namespace TechnicalTest.Mvc
             var memoryDataSourceAccount = new Dictionary<string, Account>();
 
             //sample initialization
-            var orgrimm = new Character() { Id = Guid.NewGuid(), Name = "Orgrim Doomhammer", Class = Class.Warrior, Faction = Faction.Horde, Level = 100, Race = Race.Orc };
-            var cairne = new Character() { Id = Guid.NewGuid(), Name = "Cairne Bloodhoof", Class = Class.Druid, Faction = Faction.Horde, Level = 100, Race = Race.Tauren };
+            var orgrimm = new Character() { Id = Guid.NewGuid(), Name = "Orgrim Doomhammer", Class = ClassFactory.Warrior, Faction = FactionFactory.Horde, Level = 100, Race = RaceFactory.Orc };
+            var cairne = new Character() { Id = Guid.NewGuid(), Name = "Cairne Bloodhoof", Class = ClassFactory.Druid, Faction = FactionFactory.Horde, Level = 100, Race = RaceFactory.Tauren };
             memoryDataSourceAccount.Add("wow", new Account() { Name = "wow", Password = "wow" });
             memoryDataSourceAccount["wow"].Characters.Add(orgrimm);
             memoryDataSourceAccount["wow"].Characters.Add(cairne);
 
-            var repoAccount = new SimpleRepoAccount(memoryDataSourceAccount);
+            var repoAccount = new MemoryRepoAccount(memoryDataSourceAccount);
             var serviceAccount = new ServiceAccount(repoAccount, saveUserToSession,getFromSession);
 
             var filterConfig = new FilterConfig(serviceAccount);

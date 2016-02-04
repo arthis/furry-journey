@@ -3,17 +3,33 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using TechnicalTest.Domain.Core;
 
 namespace TechnicalTest.Domain.Model
 {
-    public class Faction
+    /// <summary>
+    /// value object immutable describing the faction of a character
+    /// </summary>
+    public class Faction : ValueObject<string>
+    {
+        public Faction(string value) : base(value)
+        {
+
+        }
+    }
+
+    /// <summary>
+    /// factory responsible for creating flyweight faction value objects and caching them
+    /// </summary>
+    public class FactionFactory
     {
         private static string _alliance = "Alliance";
         private static string _horde = "Horde";
 
         private static Faction _Horde;
         private static Faction _Alliance;
-           
+        private static Dictionary<string, Faction> _dic;
+
         public static Faction Alliance
         {
             get
@@ -30,68 +46,25 @@ namespace TechnicalTest.Domain.Model
                 return _Horde;
             }
         }
-        
-        private string _value;
-
-        public Faction(string value)
+        public static Dictionary<string, Faction> Dic
         {
-            if (string.IsNullOrEmpty(value)) throw new Exception("value cannot be null or empty");
-            
-            var list = new List<string>()
+            get
             {
-                _horde,
-                _alliance, 
-            };
-
-            if (!list.Contains(value)) throw new Exception("value out of scope");
-
-            _value = value;
+                if (_dic == null)
+                    _dic = new Dictionary<string, Faction>()
+                {
+                    { _horde, Horde },
+                    { _alliance, Alliance }
+                };
+                return _dic;
+            }
         }
-
+        
         public static bool TryParse(string value, out Faction faction)
         {
-            var dic = new Dictionary<string, Faction>()
-            {
-                { _horde, Horde },
-                { _alliance, Alliance }
-            };
-            var isSuccess = dic.TryGetValue(value, out faction);
+            var isSuccess = Dic.TryGetValue(value, out faction);
             return isSuccess;
         }
 
-        public override bool Equals(object obj)
-        {
-            var s = obj as string;
-            if (s != null) return Equals(s);
-
-            var f = obj as Faction;
-            if (f != null) return Equals(f);
-
-            return false;
-        }
-
-        public bool Equals(string other)
-        {
-            return _value == other;
-        }
-
-        public bool Equals(Faction other)
-        {
-            return _value == other._value;
-        }
-
-        public override int GetHashCode()
-        {
-            int hash = 13;
-            hash = (hash * 7) + _value.GetHashCode();
-            return hash;
-        }
-
-        public override string ToString()
-        {
-            return _value;
-        } 
-
-        
     }
 }

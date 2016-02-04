@@ -7,6 +7,9 @@ using TechnicalTest.Domain.Core;
 
 namespace TechnicalTest.Domain.Model
 {
+    /// <summary>
+    /// entity object describing a character
+    /// </summary>
     public class Character
     {
         private bool _isActive ;

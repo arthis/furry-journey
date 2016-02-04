@@ -7,13 +7,13 @@ using TechnicalTest.Domain.Model;
 
 namespace TechnicalTest.Domain.Repositories
 {
-    public class SimpleRepoAccount : IRepoAccount
+    public class MemoryRepoAccount : IRepoAccount
     {
         Dictionary<string, Account> _dataSource;
 
-        public SimpleRepoAccount(Dictionary<string,Account> dataSource)
+        public MemoryRepoAccount(Dictionary<string,Account> dataSource)
         {
-            if (dataSource == null) throw new Exception("dataSource cannot be null");
+            if (dataSource == null) throw new ArgumentNullException("dataSource cannot be null");
 
             _dataSource = dataSource;
         }
@@ -30,9 +30,11 @@ namespace TechnicalTest.Domain.Repositories
             return _dataSource.Any(predicat) ? _dataSource.Single(predicat).Value: null;
         }
 
-        public Task<IEnumerable<Character>> GetCharactersAsync(Account account)
+        public Task<IEnumerable<Character>> GetCharactersAsync(Guid accountId)
         {
-            return Task.FromResult( _dataSource[account.Name].Characters.AsEnumerable());
+            var account = GetById(accountId);
+
+            return Task.FromResult(account.Characters.AsEnumerable());
         }
 
         public async Task<bool> SaveAsync(Account account)

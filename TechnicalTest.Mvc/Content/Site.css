@@ -1,6 +1,39 @@
-﻿body {
+﻿
+/* RESET */
+html,body,div,span,applet,object,iframe,h1,h2,h3,h4,h5,h6,p,blockquote,pre,a,abbr,acronym,address,big,cite,code,del,dfn,em,img,ins,kbd,q,s,samp,
+small,strike,strong,sub,sup,tt,var,b,u,i,center,dl,dt,dd,ol,ul,li,fieldset,form,label,legend,table,caption,tbody,tfoot,thead,tr,th,td,
+article,aside,canvas,details,embed,figure,figcaption,footer,header,hgroup, menu,nav,output,ruby,section,summary,time,mark,audio,video{
+margin:0;padding:0;border:0;font-size:100%;font:inherit;vertical-align:baseline;}
+
+body{line-height:1;font-size:62.5%;}
+ol,ul{list-style:none;}
+blockquote,q{quotes:none;}
+blockquote:before,blockquote:after,q:before,q:after{content:'';content:none;}
+table{border-collapse:collapse;border-spacing:0;}
+
+/* INIT */
+html{-webkit-text-size-adjust:100%;-ms-text-size-adjust:100%;}
+body,input,textarea,select,button{font-family:Arial,Helvetica,sans-serif;}
+input,textarea,select,button{font-size:1em;}
+article,aside,details,figcaption,figure,footer,header,hgroup,menu,nav,section{display:block;}
+
+/* TYPOGRAPHY */
+h1,h2,h3,h4,h5,h6,strong,b{font-weight:700;text-rendering:optimizelegibility;}
+
+/* CLEARFIX */
+.clearfix:before,.clearfix:after{content:'';display:table;clear:both;}
+
+/* MEDIA QUERIES */
+@media screen and (max-width: 1200px){
+	.columns{width:960px;}
+}
+
+body {
     padding-top: 50px;
     padding-bottom: 20px;
+    background:url(../../../../img/background.jpg) 50% 50% no-repeat;
+    background-siwe:cover;
+    color:white;
 }
 
 /* Set padding to keep content from hitting the edges */
@@ -21,4 +54,58 @@ input,
 select,
 textarea {
     max-width: 280px;
+}
+
+form input[type=text],
+form select {
+    border: 0;
+    width: 280px;
+    font-size: 1.4em;
+    border-radius: .2em;
+    padding: .5em;
+    margin: 1em 0;
+}
+.list { margin: 1em 0; }
+.list li {
+    display: inline-block;
+    width: 60px;
+    position: relative;
+}
+.list input {
+    opacity: 0;
+    position: absolute;
+    top: 0;
+    left: 0;
+    margin: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 30;
+}
+.list label {
+    font-size: 1.4em;
+    position: relative;
+    z-index: 20;
+    display: block;
+    line-height: 4;
+}
+
+.character-list li {
+    float: left;
+    font-size: 1.6em;
+    width: 31.33333%;
+    margin: .5em 1%;
+    padding: .5em;
+    background: #fafafa;
+    color: #222;
+    border-radius: .4em;
+    -webkit-box-sizing: border-box;
+       -moz-box-sizing: border-box;
+            box-sizing: border-box;
+}
+.character-list p {
+    margin: .4em 0;
+}
+.inactive {
+    opacity: .8;
+    color: #888;
 }

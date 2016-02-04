@@ -511,7 +511,7 @@ $.extend($.validator, {
 		},
 
 		errors: function() {
-			var errorClass = this.settings.errorClass.replace(" ", ".");
+			var errorClass = this.settings.errorClassFactory.replace(" ", ".");
 			return $(this.settings.errorElement + "." + errorClass, this.errorContext);
 		},
 

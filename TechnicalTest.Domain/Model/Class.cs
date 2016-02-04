@@ -3,23 +3,37 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using TechnicalTest.Domain.Core;
 
 namespace TechnicalTest.Domain.Model
 {
 
+    /// <summary>
+    /// value object immutable describing the class of a character
+    /// </summary>
+    public class Class : ValueObject<string>
+    {
+        public Class(string value) : base(value)
+        {
 
-    public class Class
+        }
+    }
+
+    /// <summary>
+    /// factory responsible for creating flyweight class value objects and caching them
+    /// </summary>
+    public class ClassFactory
     {
         private static string _warrior = "Warrior";
         private static string _druid = "Druid";
         private static string _deathKnight = "DeathKnight";
         private static string _mage = "Mage";
 
-
         private static Class _Warrior;
         private static Class _Druid;
         private static Class _DeathKnight;
         private static Class _Mage;
+        private static Dictionary<string, Class> _dic;
 
         public static Class Warrior
         {
@@ -53,71 +67,27 @@ namespace TechnicalTest.Domain.Model
                 return _Mage;
             }
         }
-
-        private string _value;
-
-        public Class(string value)
+        public static Dictionary<string, Class> Dic
         {
-            if (string.IsNullOrEmpty(value)) throw new Exception("value cannot be null or empty");
-
-            var list = new List<string>()
+            get
             {
-                _warrior,
-                _druid,
-                _deathKnight,
-                _mage
-            };
-
-            if (!list.Contains(value)) throw new Exception("value out of scope");
-
-            _value = value;
+                if (_dic == null)
+                    _dic = new Dictionary<string, Class>()
+                {
+                    { _warrior, Warrior },
+                    { _druid, Druid },
+                    { _deathKnight, DeathKnight },
+                    { _mage, Mage }
+                };
+                return _dic;
+            }
         }
 
-        public static bool TryParse(string value, out Class Class)
+        public static bool TryParse(string value, out Class @class)
         {
-            var dic = new Dictionary<string, Class>()
-            {
-                { _warrior, Warrior },
-                { _druid, Druid },
-                { _deathKnight, DeathKnight },
-                { _mage, Mage }
-            };
-            var isSuccess = dic.TryGetValue(value, out Class);
+            var isSuccess = Dic.TryGetValue(value, out @class);
             return isSuccess;
         }
-
-        public override bool Equals(object obj)
-        {
-            var s = obj as string;
-            if (s != null) return Equals(s);
-
-            var f = obj as Class;
-            if (f != null) return Equals(f);
-
-            return false;
-        }
-
-        public bool Equals(string other)
-        {
-            return _value == other;
-        }
-
-        public bool Equals(Class other)
-        {
-            return _value == other._value;
-        }
-
-        public override int GetHashCode()
-        {
-            int hash = 13;
-            hash = (hash * 7) + _value.GetHashCode();
-            return hash;
-        }
-
-        public override string ToString()
-        {
-            return _value;
-        }
-
+        
     }
 }

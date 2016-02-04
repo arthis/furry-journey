@@ -7,7 +7,9 @@ using TechnicalTest.Domain.Core;
 
 namespace TechnicalTest.Domain.Model
 {
-    
+    /// <summary>
+    /// aggregate root describing an account
+    /// </summary>    
     public class Account
     {
 
@@ -22,10 +24,20 @@ namespace TechnicalTest.Domain.Model
             Characters = new List<Character>();
         }
 
-        public bool CreateCharacter(string name, int level, Race race, Faction faction, Class @class)
+        /// <summary>
+        /// add a new character to this account, if the newly created character abides to some rules
+        /// </summary>
+        /// <param name="name">name of the character</param>
+        /// <param name="level">level of the character</param>
+        /// <param name="race">race of the character</param>
+        /// <param name="faction">faction of the character</param>
+        /// <param name="class">class of the character</param>
+        /// <returns>return true if the creation wnet smoothly</returns>
+        public bool AddNewCharacter(Guid id, string name, int level, Race race, Faction faction, Class @class)
         {
             var newCharacter = new Character()
             {
+                Id = id,
                 Name = name,
                 Level = level,
                 Race = race,
@@ -47,6 +59,11 @@ namespace TechnicalTest.Domain.Model
                 return false;
         }
 
+        /// <summary>
+        /// disable an existing active character of an account
+        /// </summary>
+        /// <param name="idCharacter">id of the character to remove</param>
+        /// <returns>return true if an active character was found</returns>
         public bool RemoveCharacter(Guid idCharacter)
         {
             var character = Characters.FirstOrDefault(c => c.Id == idCharacter && c.IsActive);
@@ -56,6 +73,11 @@ namespace TechnicalTest.Domain.Model
             return true;
         }
 
+        /// <summary>
+        /// enable an existing inactive character of an account
+        /// </summary>
+        /// <param name="idCharacter">id of the character to retrieve</param>
+        /// <returns>return true if an inactive character was found</returns>
         public bool RetrieveCharacter(Guid idCharacter)
         {
             var character = Characters.FirstOrDefault(c => c.Id == idCharacter && !c.IsActive);

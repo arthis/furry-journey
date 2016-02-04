@@ -12,7 +12,7 @@ namespace TechnicalTest.Mvc
 
         public FilterConfig(IServiceAccount serviceAccount)
         {
-            if (serviceAccount == null) throw new Exception("serviceAccount cannot be null");
+            if (serviceAccount == null) throw new ArgumentNullException("serviceAccount cannot be null");
 
             _serviceAccount = serviceAccount;
         }

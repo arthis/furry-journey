@@ -12,7 +12,7 @@ namespace TechnicalTest.Domain.Model
     {
         public bool IsSatisfiedBy(Character character )
         {
-            return character.Faction == Faction.Horde;
+            return character.Faction == FactionFactory.Horde;
         }
 
     }
@@ -21,7 +21,7 @@ namespace TechnicalTest.Domain.Model
     {
         public bool IsSatisfiedBy(Character character )
         {
-            return character.Faction == Faction.Alliance;
+            return character.Faction == FactionFactory.Alliance;
         }
     }
 
@@ -31,9 +31,9 @@ namespace TechnicalTest.Domain.Model
         public bool IsSatisfiedBy(Character character )
         {
             return 
-                character.Race == Race.Orc
-                || character.Race == Race.Tauren
-                || character.Race == Race.BloodElf;
+                character.Race == RaceFactory.Orc
+                || character.Race == RaceFactory.Tauren
+                || character.Race == RaceFactory.BloodElf;
         }
     }
 
@@ -42,9 +42,9 @@ namespace TechnicalTest.Domain.Model
 
         public bool IsSatisfiedBy(Character character )
         {
-            return character.Race == Race.Human
-                || character.Race == Race.Gnome
-                || character.Race == Race.Worgen;
+            return character.Race == RaceFactory.Human
+                || character.Race == RaceFactory.Gnome
+                || character.Race == RaceFactory.Worgen;
         }
     }
 
@@ -53,8 +53,8 @@ namespace TechnicalTest.Domain.Model
 
         public bool IsSatisfiedBy(Character character )
         {
-            return character.Race == Race.Tauren
-                   || character.Race == Race.Worgen;
+            return character.Race == RaceFactory.Tauren
+                   || character.Race == RaceFactory.Worgen;
         }
     }
 
@@ -63,7 +63,7 @@ namespace TechnicalTest.Domain.Model
 
         public bool IsSatisfiedBy(Character character )
         {
-            return character.Class == Class.Druid;
+            return character.Class == ClassFactory.Druid;
         }
     }
 
@@ -72,7 +72,7 @@ namespace TechnicalTest.Domain.Model
 
         public bool IsSatisfiedBy(Character character )
         {
-            return character.Race == Race.BloodElf;
+            return character.Race == RaceFactory.BloodElf;
         }
     }
 
@@ -81,7 +81,7 @@ namespace TechnicalTest.Domain.Model
 
         public bool IsSatisfiedBy(Character character )
         {
-            return character.Class == Class.Warrior;
+            return character.Class == ClassFactory.Warrior;
         }
     }
 

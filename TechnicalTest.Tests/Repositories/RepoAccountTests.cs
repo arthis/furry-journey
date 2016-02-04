@@ -18,7 +18,7 @@ namespace TechnicalTest.Tests.Repositories
         {
             var expecteUser = new Account() { Name = "wow", Password = "wow" };
             var ds = new Dictionary<string, Account>() { { "wow", expecteUser } };
-            IRepoAccount repo = new SimpleRepoAccount(ds);
+            IRepoAccount repo = new MemoryRepoAccount(ds);
 
             var result = repo.Get("wow");
 

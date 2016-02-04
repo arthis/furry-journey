@@ -86,7 +86,7 @@ namespace TechnicalTest.Mvc.Controllers
 
         public AccountController(IServiceAccount serviceAccount)
         {
-            if (serviceAccount == null) throw new Exception("serviceAccount cannot be null");
+            if (serviceAccount == null) throw new ArgumentNullException("serviceAccount cannot be null");
             _serviceAccount = serviceAccount;
         }
 
@@ -103,16 +103,19 @@ namespace TechnicalTest.Mvc.Controllers
             return result.Select(x =>
                 new Character()
                 {
+                    Id = x.Id,
                     Name = x.Name,
                     Level = x.Level,
                     Race = x.Race.ToString(),
                     Faction = x.Faction.ToString(),
                     Class = x.Class.ToString(),
+                    IsActive = x.IsActive
                 }
             );
         }
 
-        public async Task<Response> CreateCharacterAsync(CreateCharacter cmd)
+        [HttpPost]
+        public async Task<ActionResult> AddNewCharacterAsync(CreateCharacterCmd cmd)
         {
             var cmdValidation = new CommandValidation();
 
@@ -120,60 +123,63 @@ namespace TechnicalTest.Mvc.Controllers
             Domain.Model.Race race = null;
             Domain.Model.Class @class = null;
 
+            cmdValidation.validate(() => cmd.Id == Guid.Empty, "id cannot be empty");
             cmdValidation.validate(() => string.IsNullOrEmpty(cmd.Name), "name cannot be empty");
-            cmdValidation.validate(() => !Domain.Model.Class.TryParse(cmd.Class, out @class), "class is not known");
-            cmdValidation.validate(() => !Domain.Model.Faction.TryParse(cmd.Faction, out faction), "faction is not known");
-            cmdValidation.validate(() => !Domain.Model.Race.TryParse(cmd.Race, out race), "race is not known");
+            cmdValidation.validate(() => !Domain.Model.ClassFactory.TryParse(cmd.Class, out @class), "class is not known");
+            cmdValidation.validate(() => !Domain.Model.FactionFactory.TryParse(cmd.Faction, out faction), "faction is not known");
+            cmdValidation.validate(() => !Domain.Model.RaceFactory.TryParse(cmd.Race, out race), "race is not known");
             //cmdValidation.validate(() => cmd.Level<1 || cmd.Level>100, "level is not available"); not in the rules.. :)
 
             if (!cmdValidation.IsValid())
                 //todo give back some 4/5xx love?
-                return cmdValidation.ToResponse();
+                return Json(cmdValidation.ToResponse());
             else
             {
-                var result = await _serviceAccount.CreateCharacterAsync(cmd.Name, cmd.Level, race, faction, @class);
+                var result = await _serviceAccount.CreateCharacterAsync(cmd.Id, cmd.Name, cmd.Level, race, faction, @class);
                 var executionResult = new ExecutionValidation(result );
                 //todo give back some 4/5xx love if it failed?
-                return executionResult.ToResponse();
+                return Json(executionResult.ToResponse());
             }
                 
         }
 
-        public async Task<Response> RemoveCharacterAsync(Guid idCharacter)
+        [HttpPost]
+        public async Task<ActionResult> RemoveCharacterAsync(RemoveCharacterCmd cmd)
         {
             var cmdValidation = new CommandValidation();
 
-            cmdValidation.validate(() => idCharacter==Guid.Empty, "idCharacter cannot be empty");
+            cmdValidation.validate(() => cmd.Id==Guid.Empty, "idCharacter cannot be empty");
 
             if (!cmdValidation.IsValid())
                 //todo give back some 4/5xx love?
-                return cmdValidation.ToResponse();
+                return Json( cmdValidation.ToResponse());
             else
             {
-                var result = await _serviceAccount.RemoveCharacterAsync(idCharacter);
+                var result = await _serviceAccount.RemoveCharacterAsync(cmd.Id);
 
                 var executionResult = new ExecutionValidation(result);
                 //todo give back some 4/5xx love if it failed?
-                return executionResult.ToResponse();
+                return Json(executionResult.ToResponse());
             }
         }
 
-        public async Task<Response> RetrieveCharacterAsync(Guid idCharacter)
+        [HttpPost]
+        public async Task<ActionResult> RetrieveCharacterAsync(RetrieveCharacterCmd cmd)
         {
             var cmdValidation = new CommandValidation();
 
-            cmdValidation.validate(() => idCharacter == Guid.Empty, "idCharacter cannot be empty");
+            cmdValidation.validate(() => cmd.Id == Guid.Empty, "idCharacter cannot be empty");
 
             if (!cmdValidation.IsValid())
                 //todo give back some 4/5xx love?
-                return cmdValidation.ToResponse();
+                return Json( cmdValidation.ToResponse());
             else
             {
-                var result = await _serviceAccount.RetrieveCharacterAsync(idCharacter);
+                var result = await _serviceAccount.RetrieveCharacterAsync(cmd.Id);
 
                 var executionResult = new ExecutionValidation(result);
                 //todo give back some 4/5xx love if it failed?
-                return executionResult.ToResponse();
+                return Json( executionResult.ToResponse());
             }
         }
     }

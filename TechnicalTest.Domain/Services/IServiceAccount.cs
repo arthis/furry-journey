@@ -12,7 +12,7 @@ namespace TechnicalTest.Domain.Services
         bool authenticate(string username, string password);
         Account getCurrentAccount();
         Task<IEnumerable<Character>> GetCharactersAsync();
-        Task<bool> CreateCharacterAsync(string name, int level, Race race, Faction faction, Class @class);
+        Task<bool> CreateCharacterAsync(Guid id, string name, int level, Race race, Faction faction, Class @class);
         Task<bool> RemoveCharacterAsync(Guid idCharacter);
         Task<bool> RetrieveCharacterAsync(Guid idCharacter);
         

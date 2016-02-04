@@ -8,24 +8,35 @@ using TechnicalTest.Domain.Services;
 using TechnicalTest.Domain.Repositories;
 using TechnicalTest.Mvc.Controllers;
 using TechnicalTest.Mvc.Models.Commands;
+using System.Web.Mvc;
 
 namespace TechnicalTest.Tests
 {
     [TestFixture]
     public class AccountControllerTest
     {
+
+        public Response AssertResponse(ActionResult result)
+        {
+            Assert.IsNotNull(result);
+            Assert.IsInstanceOf<JsonResult>(result);
+            var response = ((JsonResult)result).Data as Response;
+            Assert.IsNotNull(response);
+            return response;
+        }
+
         public IRepoAccount createFakeRepo()
         {
-            var orgrimm = new Character() { Id = Guid.NewGuid(), Name = "Orgrim Doomhammer", Class = Class.Warrior, Faction = Faction.Horde, Level = 100, Race = Race.Orc };
-            var cairne = new Character() { Id = Guid.NewGuid(), Name = "Cairne Bloodhoof", Class = Class.Druid, Faction = Faction.Horde, Level = 100, Race = Race.Tauren  };
-            var Lorthemar = new Character() { Id = Guid.NewGuid(), Name = "Lor'themar Theron", Class = Class.Mage, Faction = Faction.Horde, Level = 100, Race = Race.BloodElf };
+            var orgrimm = new Character() { Id = Guid.NewGuid(), Name = "Orgrim Doomhammer", Class = ClassFactory.Warrior, Faction = FactionFactory.Horde, Level = 100, Race = RaceFactory.Orc };
+            var cairne = new Character() { Id = Guid.NewGuid(), Name = "Cairne Bloodhoof", Class = ClassFactory.Druid, Faction = FactionFactory.Horde, Level = 100, Race = RaceFactory.Tauren  };
+            var Lorthemar = new Character() { Id = Guid.NewGuid(), Name = "Lor'themar Theron", Class = ClassFactory.Mage, Faction = FactionFactory.Horde, Level = 100, Race = RaceFactory.BloodElf };
 
             var wowAccount = new Account() { Id = Guid.NewGuid(), Name = "wow", Password = "wow", Characters = new List<Character>() { orgrimm, Lorthemar } };
             var wow2Account = new Account() { Id = Guid.NewGuid(), Name = "wow2", Password = "wow2", Characters = new List<Character>() { cairne } };
 
             var ds = new Dictionary<string, Account>() { { "wow", wowAccount }, { "wow2", wow2Account } };
 
-            return new SimpleRepoAccount(ds);
+            return new MemoryRepoAccount(ds);
         }
 
         [Test]
@@ -62,32 +73,32 @@ namespace TechnicalTest.Tests
 
             serviceAccount.authenticate("wow", "wow");
             AccountController controller = new AccountController(serviceAccount);
-            var cmd = new CreateCharacter()
+            var cmd = new CreateCharacterCmd()
             {
                 Id = Guid.NewGuid(),
                 Name = "Orgrim Doomhammer",
-                Class = Class.Warrior.ToString(),
-                Faction = Faction.Horde.ToString(),
+                Class = ClassFactory.Warrior.ToString(),
+                Faction = FactionFactory.Horde.ToString(),
                 Level = 100,
-                Race = Race.Orc.ToString()
+                Race = RaceFactory.Orc.ToString()
             };
 
             // Act
-            var result = await controller.CreateCharacterAsync(cmd);
+            var result  = await controller.AddNewCharacterAsync(cmd);
 
             // Assert
-            Assert.IsNotNull(result);
-            Assert.IsTrue(result.IsOk);
+            var response = AssertResponse(result);
+            Assert.IsTrue(response.IsOk);
         }
 
         static object[] send_invalid_command_to_create_Cases =
         {
-            new object[] { Guid.NewGuid(), "",  Class.Warrior.ToString(),  Faction.Horde.ToString(), 100 ,Race.Orc.ToString()  },
-            new object[] { Guid.NewGuid(), "Orgrim Doomhammer",  "Wawa",  Faction.Horde.ToString(), 100 ,Race.Orc.ToString()  },
-            new object[] { Guid.NewGuid(), "Orgrim Doomhammer", Class.Warrior.ToString(),  "Ordos", 100 ,Race.Orc.ToString()  },
-            //new object[] { Guid.NewGuid(), "Orgrim Doomhammer",  Class.Warrior.ToString(),  Faction.Horde.ToString(), 0 ,Race.Orc.ToString()  },
-            //new object[] { Guid.NewGuid(), "Orgrim Doomhammer",  Class.Warrior.ToString(),  Faction.Horde.ToString(), 101 ,Race.Orc.ToString()  },
-            new object[] { Guid.NewGuid(), "Orgrim Doomhammer",  Class.Warrior.ToString(),  Faction.Horde.ToString(), 100 , "ordos"  }
+            new object[] { Guid.NewGuid(), "",  ClassFactory.Warrior.ToString(),  FactionFactory.Horde.ToString(), 100 ,RaceFactory.Orc.ToString()  },
+            new object[] { Guid.NewGuid(), "Orgrim Doomhammer",  "Wawa",  FactionFactory.Horde.ToString(), 100 ,RaceFactory.Orc.ToString()  },
+            new object[] { Guid.NewGuid(), "Orgrim Doomhammer", ClassFactory.Warrior.ToString(),  "Ordos", 100 ,RaceFactory.Orc.ToString()  },
+            //new object[] { Guid.NewGuid(), "Orgrim Doomhammer",  ClassFactory.Warrior.ToString(),  Faction.Horde.ToString(), 0 ,RaceFactory.Orc.ToString()  },
+            //new object[] { Guid.NewGuid(), "Orgrim Doomhammer",  ClassFactory.Warrior.ToString(),  Faction.Horde.ToString(), 101 ,RaceFactory.Orc.ToString()  },
+            new object[] { Guid.NewGuid(), "Orgrim Doomhammer",  ClassFactory.Warrior.ToString(),  FactionFactory.Horde.ToString(), 100 , "ordos"  }
 
         };
         [Test, TestCaseSource("send_invalid_command_to_create_Cases")]
@@ -102,7 +113,7 @@ namespace TechnicalTest.Tests
 
             serviceAccount.authenticate("wow", "wow");
             AccountController controller = new AccountController(serviceAccount);
-            var cmd = new CreateCharacter()
+            var cmd = new CreateCharacterCmd()
             {
                 Id = id,
                 Name = name,
@@ -113,11 +124,11 @@ namespace TechnicalTest.Tests
             };
 
             // Act
-            var result = await controller.CreateCharacterAsync(cmd);
+            var result = await controller.AddNewCharacterAsync(cmd);
 
             // Assert
-            Assert.IsNotNull(result);
-            Assert.IsFalse(result.IsOk);
+            var response = AssertResponse(result);
+            Assert.IsFalse(response.IsOk);
         }
 
         [Test]
@@ -132,22 +143,22 @@ namespace TechnicalTest.Tests
 
             serviceAccount.authenticate("wow", "wow");
             AccountController controller = new AccountController(serviceAccount);
-            var cmd = new CreateCharacter()
+            var cmd = new CreateCharacterCmd()
             {
                 Id = Guid.NewGuid(),
                 Name = "Orgrim Doomhammer",
-                Class = Class.Warrior.ToString(),
-                Faction = Faction.Horde.ToString(),
+                Class = ClassFactory.Warrior.ToString(),
+                Faction = FactionFactory.Horde.ToString(),
                 Level = 100,
-                Race = Race.Orc.ToString()
+                Race = RaceFactory.Orc.ToString()
             };
 
             // Act
-            var result = await controller.CreateCharacterAsync(cmd);
+            var result = await controller.AddNewCharacterAsync(cmd);
 
             // Assert
-            Assert.IsNotNull(result);
-            Assert.IsTrue(result.IsOk);
+            var response = AssertResponse(result);
+            Assert.IsTrue(response.IsOk);
         }
 
         [Test]
@@ -162,24 +173,25 @@ namespace TechnicalTest.Tests
 
             serviceAccount.authenticate("wow", "wow");
             AccountController controller = new AccountController(serviceAccount);
-            var cmd = new CreateCharacter() {
+            var cmd = new CreateCharacterCmd() {
                 Id = Guid.NewGuid(),
                 Name = "Orgrim Doomhammer",
-                Class = Class.Warrior.ToString(),
-                Faction = Faction.Horde.ToString(),
+                Class = ClassFactory.Warrior.ToString(),
+                Faction = FactionFactory.Horde.ToString(),
                 Level = 100,
-                Race = Race.Orc.ToString()
+                Race = RaceFactory.Orc.ToString()
             };
-            await controller.CreateCharacterAsync(cmd);
+            await controller.AddNewCharacterAsync(cmd);
             var currentAccount = serviceAccount.getCurrentAccount();
             var idCharacter = currentAccount.Characters[0].Id;
+            var cmdRemove = new RemoveCharacterCmd() { Id = idCharacter };
 
             // Act
-            var result = await controller.RemoveCharacterAsync(idCharacter);  
+            var result = await controller.RemoveCharacterAsync(cmdRemove);
 
             // Assert
-            Assert.IsNotNull(result);
-            Assert.IsTrue(result.IsOk);
+            var response = AssertResponse(result);
+            Assert.IsTrue(response.IsOk);
         }
 
         [Test]
@@ -194,24 +206,24 @@ namespace TechnicalTest.Tests
 
             serviceAccount.authenticate("wow", "wow");
             AccountController controller = new AccountController(serviceAccount);
-            var cmd = new CreateCharacter()
+            var cmd = new CreateCharacterCmd()
             {
                 Id = Guid.NewGuid(),
                 Name = "Orgrim Doomhammer",
-                Class = Class.Warrior.ToString(),
-                Faction = Faction.Horde.ToString(),
+                Class = ClassFactory.Warrior.ToString(),
+                Faction = FactionFactory.Horde.ToString(),
                 Level = 100,
-                Race = Race.Orc.ToString()
+                Race = RaceFactory.Orc.ToString()
             };
-            await controller.CreateCharacterAsync(cmd);
-            var idCharacter = Guid.Empty;
+            await controller.AddNewCharacterAsync(cmd);
+            var cmdRemove = new RemoveCharacterCmd() { Id = Guid.Empty };
 
             // Act
-            var result = await controller.RemoveCharacterAsync(idCharacter);
+            var result = await controller.RemoveCharacterAsync(cmdRemove);
 
             // Assert
-            Assert.IsNotNull(result);
-            Assert.IsFalse(result.IsOk);
+            var response = AssertResponse(result);
+            Assert.IsFalse(response.IsOk);
         }
 
 
@@ -227,26 +239,27 @@ namespace TechnicalTest.Tests
 
             serviceAccount.authenticate("wow", "wow");
             AccountController controller = new AccountController(serviceAccount);
-            var cmd = new CreateCharacter()
+            var cmd = new CreateCharacterCmd()
             {
                 Id = Guid.NewGuid(),
                 Name = "Orgrim Doomhammer",
-                Class = Class.Warrior.ToString(),
-                Faction = Faction.Horde.ToString(),
+                Class = ClassFactory.Warrior.ToString(),
+                Faction = FactionFactory.Horde.ToString(),
                 Level = 100,
-                Race = Race.Orc.ToString()
+                Race = RaceFactory.Orc.ToString()
             };
-            await controller.CreateCharacterAsync(cmd);
+            await controller.AddNewCharacterAsync(cmd);
             var currentAccount = serviceAccount.getCurrentAccount();
             var idCharacter = currentAccount.Characters[0].Id;
-            await controller.RemoveCharacterAsync(idCharacter);
+            await controller.RemoveCharacterAsync(new RemoveCharacterCmd() { Id = idCharacter });
 
+            var cmdRetrieve = new RetrieveCharacterCmd() { Id = idCharacter };
             // Act
-            var result = await controller.RetrieveCharacterAsync(idCharacter);
+            var result = await controller.RetrieveCharacterAsync(cmdRetrieve);
 
             // Assert
-            Assert.IsNotNull(result);
-            Assert.IsTrue(result.IsOk);
+            var response = AssertResponse(result);
+            Assert.IsTrue(response.IsOk);
         }
 
         [Test]
@@ -261,26 +274,27 @@ namespace TechnicalTest.Tests
 
             serviceAccount.authenticate("wow", "wow");
             AccountController controller = new AccountController(serviceAccount);
-            var cmd = new CreateCharacter()
+            var cmd = new CreateCharacterCmd()
             {
                 Id = Guid.NewGuid(),
                 Name = "Orgrim Doomhammer",
-                Class = Class.Warrior.ToString(),
-                Faction = Faction.Horde.ToString(),
+                Class = ClassFactory.Warrior.ToString(),
+                Faction = FactionFactory.Horde.ToString(),
                 Level = 100,
-                Race = Race.Orc.ToString()
+                Race = RaceFactory.Orc.ToString()
             };
-            await controller.CreateCharacterAsync(cmd);
+            await controller.AddNewCharacterAsync(cmd);
             var currentAccount = serviceAccount.getCurrentAccount();
             var idCharacter = currentAccount.Characters[0].Id;
-            await controller.RemoveCharacterAsync(idCharacter);
+            await controller.RemoveCharacterAsync(new RemoveCharacterCmd() {  Id=idCharacter});
+            var retrieveCmd = new RetrieveCharacterCmd() { Id = Guid.Empty };
 
             // Act
-            var result = await controller.RetrieveCharacterAsync(Guid.Empty);
+            var result = await controller.RetrieveCharacterAsync(retrieveCmd);
 
             // Assert
-            Assert.IsNotNull(result);
-            Assert.IsFalse(result.IsOk);
+            var response = AssertResponse(result);
+            Assert.IsFalse(response.IsOk);
         }
 
     }

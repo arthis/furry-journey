@@ -5,7 +5,7 @@ using System.Web;
 
 namespace TechnicalTest.Mvc.Models.Commands
 {
-    public class CreateCharacter
+    public class CreateCharacterCmd
     {
         public Guid Id { get; set; }
         public string Name { get; set; }

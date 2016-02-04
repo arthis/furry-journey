@@ -1031,7 +1031,7 @@ intellisense.annotate(jQuery.fn, {
   },
   'class': function() {
     /// <signature>
-    ///   <summary>Selects all elements with the given class.</summary>
+    ///   <summary>Selects all elements with the given ClassFactory.</summary>
     ///   <param name="class" type="String">A class to search for. An element can have multiple classes; only one of them must match.</param>
     /// </signature>
   },
@@ -1462,7 +1462,7 @@ intellisense.annotate(jQuery.fn, {
   },
   'hasClass': function() {
     /// <signature>
-    ///   <summary>Determine whether any of the matched elements are assigned the given class.</summary>
+    ///   <summary>Determine whether any of the matched elements are assigned the given ClassFactory.</summary>
     ///   <param name="className" type="String">The class name to search for.</param>
     ///   <returns type="Boolean" />
     /// </signature>

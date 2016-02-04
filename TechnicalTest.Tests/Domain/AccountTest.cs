@@ -20,7 +20,7 @@ namespace TechnicalTest.Tests
         {
             //arrange 
             var newAccount = new Account() { Id = Guid.NewGuid(), Name = "wow", Password = "wow", Characters = new List<Character>() };
-            newAccount.CreateCharacter("Orgrim Doomhammer", 100, Race.Orc, Faction.Horde, Class.Warrior);
+            newAccount.AddNewCharacter(Guid.NewGuid(), "Orgrim Doomhammer", 100, RaceFactory.Orc, FactionFactory.Horde, ClassFactory.Warrior);
             var idCharacter = newAccount.Characters[0].Id;
             // Act
             var result = newAccount.RemoveCharacter(idCharacter);
@@ -36,7 +36,7 @@ namespace TechnicalTest.Tests
         {
             //arrange 
             var newAccount = new Account() { Id = Guid.NewGuid(), Name = "wow", Password = "wow", Characters = new List<Character>() };
-            newAccount.CreateCharacter("Orgrim Doomhammer", 100, Race.Orc, Faction.Horde, Class.Warrior);
+            newAccount.AddNewCharacter(Guid.NewGuid(), "Orgrim Doomhammer", 100, RaceFactory.Orc, FactionFactory.Horde, ClassFactory.Warrior);
             var idCharacter = newAccount.Characters[0].Id;
             newAccount.RemoveCharacter(idCharacter);
             // Act
@@ -53,7 +53,7 @@ namespace TechnicalTest.Tests
         {
             //arrange 
             var newAccount = new Account() { Id = Guid.NewGuid(), Name = "wow", Password = "wow", Characters = new List<Character>() };
-            newAccount.CreateCharacter("Orgrim Doomhammer", 100, Race.Orc, Faction.Horde, Class.Warrior);
+            newAccount.AddNewCharacter(Guid.NewGuid(), "Orgrim Doomhammer", 100, RaceFactory.Orc, FactionFactory.Horde, ClassFactory.Warrior);
             var idCharacter = newAccount.Characters[0].Id;
             newAccount.RemoveCharacter(idCharacter);
 
@@ -71,7 +71,7 @@ namespace TechnicalTest.Tests
         {
             //arrange 
             var newAccount = new Account() { Id = Guid.NewGuid(), Name = "wow", Password = "wow", Characters = new List<Character>() };
-            newAccount.CreateCharacter("Orgrim Doomhammer", 100, Race.Orc, Faction.Horde, Class.Warrior);
+            newAccount.AddNewCharacter(Guid.NewGuid(), "Orgrim Doomhammer", 100, RaceFactory.Orc, FactionFactory.Horde, ClassFactory.Warrior);
             var idCharacter = newAccount.Characters[0].Id;
 
             // Act
@@ -105,7 +105,7 @@ namespace TechnicalTest.Tests
             var wowAccount = new Account() { Id = Guid.NewGuid(), Name = "wow", Password = "wow", Characters = new List<Character>() { } };
 
             // Act
-            var result = wowAccount.CreateCharacter("Cairne Bloodhoof", 100, Race.Tauren, Faction.Horde, Class.Druid);
+            var result = wowAccount.AddNewCharacter(Guid.NewGuid(), "Cairne Bloodhoof", 100, RaceFactory.Tauren, FactionFactory.Horde, ClassFactory.Druid);
 
             // Assert
             Assert.IsTrue(result);
@@ -115,9 +115,9 @@ namespace TechnicalTest.Tests
 
         static object[] Orc_Tauren_and_Blood_Elves_belong_to_the_Horde_Cases =
         {
-            new object[] { "Orgrim Doomhammer", 100, Race.Orc, Faction.Horde, Class.Warrior },
-            new object[] { "Lor'themar Theron", 100, Race.BloodElf, Faction.Horde, Class.Mage },
-            new object[] { "Cairne Bloodhoof", 100, Race.Tauren, Faction.Horde, Class.Druid },
+            new object[] { "Orgrim Doomhammer", 100, RaceFactory.Orc, FactionFactory.Horde, ClassFactory.Warrior },
+            new object[] { "Lor'themar Theron", 100, RaceFactory.BloodElf, FactionFactory.Horde, ClassFactory.Mage },
+            new object[] { "Cairne Bloodhoof", 100, RaceFactory.Tauren, FactionFactory.Horde, ClassFactory.Druid },
         };
         [Test, TestCaseSource("Orc_Tauren_and_Blood_Elves_belong_to_the_Horde_Cases")]
         public void Orc_Tauren_and_Blood_Elves_belong_to_the_Horde(string name, int level, Race race, Faction faction, Class @class)
@@ -126,7 +126,7 @@ namespace TechnicalTest.Tests
             var newAccount = new Account() { Id = Guid.NewGuid(), Name = "wow", Password = "wow", Characters = new List<Character>() };
 
             // Act
-            var result = newAccount.CreateCharacter(name, level, race, faction, @class);
+            var result = newAccount.AddNewCharacter(Guid.NewGuid(),name , level, race, faction, @class);
 
             // Assert
             Assert.IsTrue(result);
@@ -136,9 +136,9 @@ namespace TechnicalTest.Tests
 
         static object[] Orc_Tauren_and_Blood_Elves_do_not_belong_to_the_Alliance_Cases =
         {
-            new object[] { "Orgrim Doomhammer", 100, Race.Orc, Faction.Alliance, Class.Warrior },
-            new object[] { "Lor'themar Theron", 100, Race.BloodElf, Faction.Alliance, Class.Mage },
-            new object[] { "Cairne Bloodhoof", 100, Race.Tauren, Faction.Alliance, Class.Druid },
+            new object[] { "Orgrim Doomhammer", 100, RaceFactory.Orc, FactionFactory.Alliance, ClassFactory.Warrior },
+            new object[] { "Lor'themar Theron", 100, RaceFactory.BloodElf, FactionFactory.Alliance, ClassFactory.Mage },
+            new object[] { "Cairne Bloodhoof", 100, RaceFactory.Tauren, FactionFactory.Alliance, ClassFactory.Druid },
         };
         [Test, TestCaseSource("Orc_Tauren_and_Blood_Elves_do_not_belong_to_the_Alliance_Cases")]
         public void Orc_Tauren_and_Blood_Elves_do_not_belong_to_the_Alliance(string name, int level, Race race, Faction faction, Class @class)
@@ -147,7 +147,7 @@ namespace TechnicalTest.Tests
             var newAccount = new Account() { Id = Guid.NewGuid(), Name = "wow", Password = "wow", Characters = new List<Character>() };
 
             // Act
-            var result = newAccount.CreateCharacter(name, level, race, faction, @class);
+            var result = newAccount.AddNewCharacter(Guid.NewGuid(),name , level, race, faction, @class);
 
             // Assert
             Assert.IsFalse(result);
@@ -156,9 +156,9 @@ namespace TechnicalTest.Tests
 
         static object[] Human_Gnome_and_Worgen_belong_to_the_Alliance_Cases =
         {
-            new object[] { "Varian Wrynn", 100, Race.Human, Faction.Alliance, Class.Warrior },
-            new object[] { "Gelbin Mekkatorque", 100, Race.Gnome, Faction.Alliance, Class.Warrior },
-            new object[] { "Genn Greymane", 100, Race.Worgen, Faction.Alliance, Class.Druid },
+            new object[] { "Varian Wrynn", 100, RaceFactory.Human, FactionFactory.Alliance, ClassFactory.Warrior },
+            new object[] { "Gelbin Mekkatorque", 100, RaceFactory.Gnome, FactionFactory.Alliance, ClassFactory.Warrior },
+            new object[] { "Genn Greymane", 100, RaceFactory.Worgen, FactionFactory.Alliance, ClassFactory.Druid },
         };
         [Test, TestCaseSource("Human_Gnome_and_Worgen_belong_to_the_Alliance_Cases")]
         public void Human_Gnome_and_Worgen_belong_to_the_Alliance(string name, int level, Race race, Faction faction, Class @class)
@@ -167,7 +167,7 @@ namespace TechnicalTest.Tests
             var newAccount = new Account() { Id = Guid.NewGuid(), Name = "wow", Password = "wow", Characters = new List<Character>() };
 
             // Act
-            var result = newAccount.CreateCharacter(name, level, race, faction, @class);
+            var result = newAccount.AddNewCharacter(Guid.NewGuid(),name , level, race, faction, @class);
 
             // Assert
             Assert.IsTrue(result);
@@ -176,9 +176,9 @@ namespace TechnicalTest.Tests
 
         static object[] Human_Gnome_and_Worgen_do_not_belong_to_the_Horde_Cases =
         {
-            new object[] { "Varian Wrynn", 100, Race.Human, Faction.Horde, Class.Warrior },
-            new object[] { "Gelbin Mekkatorque", 100, Race.Gnome, Faction.Horde, Class.Warrior },
-            new object[] { "Genn Greymane", 100, Race.Worgen, Faction.Horde, Class.Druid },
+            new object[] { "Varian Wrynn", 100, RaceFactory.Human, FactionFactory.Horde, ClassFactory.Warrior },
+            new object[] { "Gelbin Mekkatorque", 100, RaceFactory.Gnome, FactionFactory.Horde, ClassFactory.Warrior },
+            new object[] { "Genn Greymane", 100, RaceFactory.Worgen, FactionFactory.Horde, ClassFactory.Druid },
         };
         [Test, TestCaseSource("Human_Gnome_and_Worgen_do_not_belong_to_the_Horde_Cases")]
         public void Human_Gnome_and_Worgen_do_not_belong_to_the_Horde(string name, int level, Race race, Faction faction, Class @class)
@@ -187,7 +187,7 @@ namespace TechnicalTest.Tests
             var newAccount = new Account() { Id = Guid.NewGuid(), Name = "wow", Password = "wow", Characters = new List<Character>() };
 
             // Act
-            var result = newAccount.CreateCharacter(name, level, race, faction, @class);
+            var result = newAccount.AddNewCharacter(Guid.NewGuid(),name , level, race, faction, @class);
 
             // Assert
             Assert.IsFalse(result);
@@ -196,8 +196,8 @@ namespace TechnicalTest.Tests
 
         static object[] Worgen_and_Tauren_can_be_druid_Cases =
         {
-            new object[] { "Cairne Bloodhoof", 100, Race.Tauren, Faction.Horde, Class.Druid },
-            new object[] { "Genn Greymane", 100, Race.Worgen, Faction.Alliance, Class.Druid }
+            new object[] { "Cairne Bloodhoof", 100, RaceFactory.Tauren, FactionFactory.Horde, ClassFactory.Druid },
+            new object[] { "Genn Greymane", 100, RaceFactory.Worgen, FactionFactory.Alliance, ClassFactory.Druid }
         };
         [Test, TestCaseSource("Worgen_and_Tauren_can_be_druid_Cases")]
         public void Worgen_and_Tauren_can_be_druid(string name, int level, Race race, Faction faction, Class @class)
@@ -206,7 +206,7 @@ namespace TechnicalTest.Tests
             var newAccount = new Account() { Id = Guid.NewGuid(), Name = "wow", Password = "wow", Characters = new List<Character>() };
 
             // Act
-            var result = newAccount.CreateCharacter(name, level, race, faction, @class);
+            var result = newAccount.AddNewCharacter(Guid.NewGuid(),name , level, race, faction, @class);
 
             // Assert
             Assert.IsTrue(result);
@@ -215,10 +215,10 @@ namespace TechnicalTest.Tests
 
         static object[] Human_Gnome_Orc_and_BloodElves_cannot_be_druid_Cases =
         {
-            new object[] { "Varian Wrynn", 100, Race.Human, Faction.Alliance, Class.Druid },
-            new object[] { "Gelbin Mekkatorque", 100, Race.Gnome, Faction.Alliance, Class.Druid },
-            new object[] { "Orgrim Doomhammer", 100, Race.Orc, Faction.Horde, Class.Druid },
-            new object[] { "Lor'themar Theron", 100, Race.BloodElf, Faction.Horde, Class.Druid }
+            new object[] { "Varian Wrynn", 100, RaceFactory.Human, FactionFactory.Alliance, ClassFactory.Druid },
+            new object[] { "Gelbin Mekkatorque", 100, RaceFactory.Gnome, FactionFactory.Alliance, ClassFactory.Druid },
+            new object[] { "Orgrim Doomhammer", 100, RaceFactory.Orc, FactionFactory.Horde, ClassFactory.Druid },
+            new object[] { "Lor'themar Theron", 100, RaceFactory.BloodElf, FactionFactory.Horde, ClassFactory.Druid }
         };
         [Test, TestCaseSource("Human_Gnome_Orc_and_BloodElves_cannot_be_druid_Cases")]
         public void Human_Gnome_Orc_and_BloodElves_cannot_be_druid(string name, int level, Race race, Faction faction, Class @class)
@@ -227,7 +227,7 @@ namespace TechnicalTest.Tests
             var newAccount = new Account() { Id = Guid.NewGuid(), Name = "wow", Password = "wow", Characters = new List<Character>() };
 
             // Act
-            var result = newAccount.CreateCharacter(name, level, race, faction, @class);
+            var result = newAccount.AddNewCharacter(Guid.NewGuid(),name , level, race, faction, @class);
 
             // Assert
             Assert.IsFalse(result);
@@ -236,7 +236,7 @@ namespace TechnicalTest.Tests
 
         static object[] BloodElves_cannot_be_warrior_Cases =
         {
-            new object[] { "Lor'themar Theron", 100, Race.BloodElf, Faction.Horde, Class.Warrior }
+            new object[] { "Lor'themar Theron", 100, RaceFactory.BloodElf, FactionFactory.Horde, ClassFactory.Warrior }
         };
         [Test, TestCaseSource("BloodElves_cannot_be_warrior_Cases")]
         public void BloodElves_cannot_be_warrior(string name, int level, Race race, Faction faction, Class @class)
@@ -245,7 +245,7 @@ namespace TechnicalTest.Tests
             var newAccount = new Account() { Id = Guid.NewGuid(), Name = "wow", Password = "wow", Characters = new List<Character>() };
 
             // Act
-            var result = newAccount.CreateCharacter(name, level, race, faction, @class);
+            var result = newAccount.AddNewCharacter(Guid.NewGuid(),name , level, race, faction, @class);
 
             // Assert
             Assert.IsFalse(result);
@@ -255,11 +255,11 @@ namespace TechnicalTest.Tests
 
         static object[] Except_BloodElves_all_can_be_warrior_Cases =
         {
-            new object[] { "Varian Wrynn", 100, Race.Human, Faction.Alliance, Class.Warrior},
-            new object[] { "Gelbin Mekkatorque", 100, Race.Gnome, Faction.Alliance, Class.Warrior},
-            new object[] { "Orgrim Doomhammer", 100, Race.Orc, Faction.Horde, Class.Warrior},
-            new object[] { "Cairne Bloodhoof", 100, Race.Tauren, Faction.Horde, Class.Warrior},
-            new object[] { "Genn Greymane", 100, Race.Worgen, Faction.Alliance, Class.Warrior}
+            new object[] { "Varian Wrynn", 100, RaceFactory.Human, FactionFactory.Alliance, ClassFactory.Warrior},
+            new object[] { "Gelbin Mekkatorque", 100, RaceFactory.Gnome, FactionFactory.Alliance, ClassFactory.Warrior},
+            new object[] { "Orgrim Doomhammer", 100, RaceFactory.Orc, FactionFactory.Horde, ClassFactory.Warrior},
+            new object[] { "Cairne Bloodhoof", 100, RaceFactory.Tauren, FactionFactory.Horde, ClassFactory.Warrior},
+            new object[] { "Genn Greymane", 100, RaceFactory.Worgen, FactionFactory.Alliance, ClassFactory.Warrior}
         };
         [Test, TestCaseSource("Except_BloodElves_all_can_be_warrior_Cases")]
         public void Except_BloodElves_all_can_be_warrior(string name, int level, Race race, Faction faction, Class @class)
@@ -268,7 +268,7 @@ namespace TechnicalTest.Tests
             var newAccount = new Account() { Id = Guid.NewGuid(), Name = "wow", Password = "wow", Characters = new List<Character>() };
 
             // Act
-            var result = newAccount.CreateCharacter(name, level, race, faction, @class);
+            var result = newAccount.AddNewCharacter(Guid.NewGuid(),name , level, race, faction, @class);
 
             // Assert
             Assert.IsTrue(result);
@@ -277,7 +277,7 @@ namespace TechnicalTest.Tests
 
         static object[] when_account_has_not_one_lvl_55__then_it_cannot_create_death_knight_Cases =
         {
-            new object[] { "Genn Greymane", 100, Race.Worgen, Faction.Alliance, Class.DeathKnight }
+            new object[] { "Genn Greymane", 100, RaceFactory.Worgen, FactionFactory.Alliance, ClassFactory.DeathKnight }
         };
         [Test, TestCaseSource("when_account_has_not_one_lvl_55__then_it_cannot_create_death_knight_Cases")]
         public void when_account_has_not_one_lvl_55__then_it_cannot_create_death_knight(string name, int level, Race race, Faction faction, Class @class)
@@ -286,7 +286,7 @@ namespace TechnicalTest.Tests
             var newAccount = new Account() { Id = Guid.NewGuid(), Name = "wow", Password = "wow", Characters = new List<Character>() };
 
             // Act
-            var result = newAccount.CreateCharacter(name, level, race, faction, @class);
+            var result = newAccount.AddNewCharacter(Guid.NewGuid(),name , level, race, faction, @class);
 
             // Assert
             Assert.IsFalse(result);
@@ -295,17 +295,17 @@ namespace TechnicalTest.Tests
 
         static object[] when_account_has_one_lvl_55__then_it_can_create_death_knight_Cases =
         {
-            new object[] { "Genn Greymane", 100, Race.Worgen, Faction.Alliance, Class.DeathKnight }
+            new object[] { "Genn Greymane", 100, RaceFactory.Worgen, FactionFactory.Alliance, ClassFactory.DeathKnight }
         };
         [Test, TestCaseSource("when_account_has_one_lvl_55__then_it_can_create_death_knight_Cases")]
         public void when_account_has_one_lvl_55__then_it_can_create_death_knight(string name, int level, Race race, Faction faction, Class @class)
         {
             //arrange 
             var newAccount = new Account() { Id = Guid.NewGuid(), Name = "wow", Password = "wow", Characters = new List<Character>() };
-            newAccount.CreateCharacter("Cairne Bloodhoof", 100, Race.Tauren, Faction.Horde, Class.Druid);
+            newAccount.AddNewCharacter(Guid.NewGuid(), "Cairne Bloodhoof", 100, RaceFactory.Tauren, FactionFactory.Horde, ClassFactory.Druid);
 
             // Act
-            var result = newAccount.CreateCharacter(name, level, race, faction, @class);
+            var result = newAccount.AddNewCharacter(Guid.NewGuid(),name , level, race, faction, @class);
 
             // Assert
             Assert.IsTrue(result);

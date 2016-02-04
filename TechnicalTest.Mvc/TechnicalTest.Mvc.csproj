@@ -137,7 +137,9 @@
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
-    <Compile Include="Models\Commands\CreateCharacter.cs" />
+    <Compile Include="Models\Commands\RetrieveCharacterCmd.cs" />
+    <Compile Include="Models\Commands\RemoveCharacterCmd.cs" />
+    <Compile Include="Models\Commands\CreateCharacterCmd.cs" />
     <Compile Include="Models\Read\Character.cs" />
     <Compile Include="Models\Read\CharacterListView.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -150,9 +152,14 @@
     <Content Include="Global.asax" />
     <Content Include="Content\Site.css" />
     <Content Include="img\background.jpg" />
+    <Content Include="Scripts\addNewCharacter.js" />
+    <Content Include="Scripts\core.js" />
+    <Content Include="Scripts\characterListView.js" />
+    <Content Include="Scripts\app.js" />
     <Content Include="Scripts\bootstrap.js" />
     <Content Include="Scripts\bootstrap.min.js" />
     <None Include="Scripts\jquery-1.10.2.intellisense.js" />
+    <Content Include="Scripts\doT.min.js" />
     <Content Include="Scripts\jquery-1.10.2.js" />
     <Content Include="Scripts\jquery-1.10.2.min.js" />
     <None Include="Scripts\jquery.validate-vsdoc.js" />

@@ -22,13 +22,13 @@ namespace TechnicalTest.Domain.Model
 
         public Is_Character_DeathKnight(Character character)
         {
-            if (character== null) throw new Exception("character cannot be null");
+            if (character== null) throw new ArgumentNullException("character cannot be null");
 
             _character = character;
         }
         public bool IsSatisfiedBy(Account account)
         {
-            return _character.Class == Class.DeathKnight;
+            return _character.Class == ClassFactory.DeathKnight;
         }
     }
 

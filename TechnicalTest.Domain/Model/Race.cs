@@ -3,10 +3,25 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using TechnicalTest.Domain.Core;
 
 namespace TechnicalTest.Domain.Model
 {
-    public class Race
+    /// <summary>
+    /// value object immutable describing the race of a character
+    /// </summary>
+    public class Race : ValueObject<string>
+    {
+        public Race(string value) : base(value)
+        {
+
+        }
+    }
+    
+    /// <summary>
+    /// factory responsible for creating flyweight Race value objects and caching them
+    /// </summary>
+    public class RaceFactory
     {
         private static string _orc = "Orc";
         private static string _tauren = "Tauren";
@@ -21,6 +36,7 @@ namespace TechnicalTest.Domain.Model
         private static Race _Human;
         private static Race _Gnome;
         private static Race _Worgen;
+        private static Dictionary<string, Race> _dic;
 
         public static Race Orc
         {
@@ -70,73 +86,29 @@ namespace TechnicalTest.Domain.Model
                 return _Worgen;
             }
         }
-
-        
-        private string _value;
-       
-        public Race(string value)
+        public static Dictionary<string, Race> Dic
         {
-            if (string.IsNullOrEmpty(value)) throw new Exception("value cannot be null or empty");
-
-            var dic = new List<string>()
+            get
             {
-                _orc,
-                _tauren, 
-                _bloodelf, 
-                _human, 
-                _gnome,
-                _worgen
-            };
-            if (!dic.Contains(value)) throw new Exception("value out of scope");
-
-            _value = value;
+                if (_dic == null)
+                    _dic = new Dictionary<string, Race> ()
+                {
+                    { _orc, Orc },
+                    { _tauren, Tauren },
+                    { _bloodelf, BloodElf },
+                    { _human, Human },
+                    { _gnome,Gnome },
+                    { _worgen,Worgen }
+                };
+                return _dic;
+            }
         }
-
+        
         public static bool TryParse(string value, out Race race)
         {
-            var dic = new Dictionary<string, Race>()
-            {
-                { _orc, Orc },
-                { _tauren, Tauren },
-                { _bloodelf, BloodElf },
-                { _human, Human },
-                { _gnome,Gnome },
-                { _worgen,Worgen }
-            };
-            return dic.TryGetValue(value, out race);
+            var isSuccess = Dic.TryGetValue(value, out race);
+            return isSuccess;
         }
 
-        public override bool Equals(object obj)
-        {
-            var s = obj as string;
-            if (s != null) return Equals(s);
-
-            var f = obj as Race;
-            if (f != null) return Equals(f);
-
-            return false;
-        }
-
-        public bool Equals(string other)
-        {
-            return _value == other;
-        }
-
-        public bool Equals(Race other)
-        {
-            return _value == other._value;
-        }
-
-        public override int GetHashCode()
-        {
-            int hash = 13;
-            hash = (hash * 7) + _value.GetHashCode();
-            return hash;
-        }
-
-        public override string ToString()
-        {
-            return _value;
-        }
     }
 }

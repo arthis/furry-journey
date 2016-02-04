@@ -10,7 +10,7 @@ namespace TechnicalTest.Domain.Repositories
     public interface IRepoAccount
     {
         Account Get(string username);
-        Task<IEnumerable<Character>> GetCharactersAsync(Account account);
+        Task<IEnumerable<Character>> GetCharactersAsync(Guid accountId);
         Account GetById(Guid id);
         Task<bool> SaveAsync(Account account);
     }

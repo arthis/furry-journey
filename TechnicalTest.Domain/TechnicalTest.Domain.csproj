@@ -30,6 +30,10 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="Newtonsoft.Json, Version=8.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
+      <HintPath>..\packages\Newtonsoft.Json.8.0.2\lib\net45\Newtonsoft.Json.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.Xml.Linq" />
@@ -41,18 +45,24 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Core\ISpecification.cs" />
+    <Compile Include="Core\ValueObject.cs" />
     <Compile Include="Model\Character.cs" />
     <Compile Include="Model\AccountSpecifications.cs" />
     <Compile Include="Model\Class.cs" />
     <Compile Include="Model\CharacterSpecifications.cs" />
     <Compile Include="Model\Faction.cs" />
     <Compile Include="Model\Race.cs" />
+    <Compile Include="Model\Session.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Repositories\RepoAccount.cs" />
+    <Compile Include="Repositories\FileSystemRepoAccount.cs" />
+    <Compile Include="Repositories\MemoryRepoAccount.cs" />
     <Compile Include="Repositories\IRepoAccount.cs" />
     <Compile Include="Services\IServiceAccount.cs" />
     <Compile Include="Services\ServiceAccount.cs" />
     <Compile Include="Model\Account.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="packages.config" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

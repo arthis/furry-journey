@@ -16,9 +16,9 @@ namespace TechnicalTest.Domain.Services
 
         public ServiceAccount(IRepoAccount repoAccount , Action<Account> saveUserToSession, Func<Account> getFromSession)
         {
-            if (saveUserToSession == null) throw new Exception("saveUserToSession cannot be null");
-            if (getFromSession == null) throw new Exception("getFromSession cannot be null");
-            if (repoAccount == null) throw new Exception("repoAccount cannot be null");
+            if (saveUserToSession == null) throw new ArgumentNullException("saveUserToSession cannot be null");
+            if (getFromSession == null) throw new ArgumentNullException("getFromSession cannot be null");
+            if (repoAccount == null) throw new ArgumentNullException("repoAccount cannot be null");
 
             _repoAccount = repoAccount;
             _saveUserToSession = saveUserToSession;
@@ -44,17 +44,17 @@ namespace TechnicalTest.Domain.Services
         public async Task<IEnumerable<Character>> GetCharactersAsync()
         {
             var currentSession = _getFromSession();
-            var account = _repoAccount.GetById(currentSession.Id);
 
-            return await _repoAccount.GetCharactersAsync(account);
+            return await _repoAccount.GetCharactersAsync(currentSession.Id);
         }
 
-        public async Task<bool> CreateCharacterAsync(string name, int level, Race race, Faction faction, Class @class)
+        public async Task<bool> CreateCharacterAsync(Guid id, string name, int level, Race race, Faction faction, Class @class)
         {
             var currentSession = _getFromSession();
+
             var account = _repoAccount.GetById(currentSession.Id);
 
-            if (account.CreateCharacter(name, level, race, faction, @class))
+            if (account.AddNewCharacter(id,name, level, race, faction, @class))
                 return await _repoAccount.SaveAsync(account);
             else
                 return await Task.FromResult(false);

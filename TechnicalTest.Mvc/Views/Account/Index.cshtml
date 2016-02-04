@@ -1,37 +1,71 @@
 ﻿@model TechnicalTest.Mvc.Models.Read.CharacterListView
 
-<!-- container to render the list-->
-<ul class="character-list clearfix">
-</ul>
+<!-- containers for the different part of the page-->
+<div id="main"></div>
+<div id="characterCreation"></div>
 
 <!-- datasource for the characters available on the page-->
-<script type="application/json" id="characters">@Html.Raw(Json.Encode(Model.Characters))</script>
+<script type="application/json" id="accountData">
+    @Html.Raw(Json.Encode(Model.Characters))
+</script>
+
+<!--template to render thee main list-->
+<script id="mainTemplate" type="text/html">
+    <ul id="charactersList" class="character-list clearfix"></ul>
+    <div id="viewAddNewCharacter" class="viewAddNewCharacter">Add new Character</div>
+</script>
 
 <!--template to render one character-->
 <script id="characterTemplate" type="text/html">
-    <li class="character">
+    <li class="character {{? it.IsActive==true }} active {{?? it.IsActive==false }} inactive {{?}}">
         <div>
-            <#= actions #>
-            <p class="name"><# =Name #></#></p>
-            <p class="level"><# =Level #></p>
-            <p class="race"><# =Race #></p>
-            <p class="class"><# =Class #></p>
-            <p class="faction"><# =Faction #></p>
+            {{? it.IsActive==true }}
+            <div class="removeCharacter" data-id="{{= it.Id}}">remove character</div>
+            {{?? it.IsActive==false }}
+            <div class="retrieveCharacter" data-id="{{= it.Id}}">retrieve character</div>
+            {{?}}
+
+            <p class="name">{{= it.Name }}</}}</p>
+            <p class="level">{{= it.Level }}</p>
+            <p class="race">{{= it.Race }}</p>
+            <p class="class">{{= it.Class }}</p>
+            <p class="faction">{{= it.Faction }}</p>
         </div>
         <figure></figure>
     </li>
 </script>
 
 <!--template to create one character-->
-<script id="createCharacterTemplate" type="text/html">
-    <li class="createCharacter">
+<script id="addNewCharacterTemplate" type="text/html">
+    <form id="formAddNewCharacter">
         <div>
-                <p class="name"><# =Name #></#></p>
-                <p class="level"><# =Level #></p>
-                <p class="race"><# =Race #></p>
-                <p class="class"><# =Class #></p>
-                <p class="faction"><# =Faction #></p>
+            <p class="name"><input type="text" class="nameInput" placeholder="Name" /></p>
+            <p class="level">
+                <select class="levelInput">
+                    <option value="1">1</option>
+                    <option value="1">20</option>
+                    <option value="1">55</option>
+                    <option value="1">60</option>
+                    <option value="1">70</option>
+                    <option value="1">100</option>
+                </select>
+            </p>
+            <ul class="race list">
+                <li><input type="radio" name="race" class="raceInput" value="Human" id="raceHuman" /><label for="raceHuman">Human</label></li>
+                <li><input type="radio" name="race" class="raceInput" value="Gnome" id="raceGnome" /><label for="raceGnome">Gnome</label></li>
+                <li><input type="radio" name="race" class="raceInput" value="Worgen" id="raceWorgen" /><label for="raceWorgen">Worgen</label></li>
+                <li><input type="radio" name="race" class="raceInput" value="Orc" id="raceOrc" /><label for="raceOrc">Orc</label></li>
+                <li><input type="radio" name="race" class="raceInput" value="Tauren" id="raceTauren" /><label for="raceTauren">Tauren</label></li>
+                <li><input type="radio" name="race" class="raceInput" value="BloodElf" id="raceBloodElf" /><label for="raceBloodElf">BloodElf</label></li>
+            </ul>
+            <ul class="class list">
+                <li><input type="radio" name="characterClass" class="characterClassInput" value="Warrior" id="classWarrior" /><label for="classWarrior">Warrior</label></li>
+                <li><input type="radio" name="characterClass" class="characterClassInput" value="Mage" id="classMage" /><label for="classMage">Mage</label></li>
+                <li><input type="radio" name="characterClass" class="characterClassInput" value="Druid" id="classDruid" /><label for="classDruid">Druid</label></li>
+                <li><input type="radio" name="characterClass" class="characterClassInput" value="DeathKnight" id="classDeathKnight" /><label for="classDeathKnight">Death Knight</label></li>
+            </ul>
         </div>
-        <figure></figure>
-    </li>
+        <input type="submit" class="addNewCharacterSubmit"  value="Accept"/>
+    </form>
 </script>
+
