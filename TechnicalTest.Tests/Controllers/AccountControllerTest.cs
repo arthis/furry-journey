@@ -21,7 +21,7 @@ namespace TechnicalTest.Tests
             Assert.IsNotNull(result);
             Assert.IsInstanceOf<JsonResult>(result);
             var response = ((JsonResult)result).Data as Response;
-            Assert.IsNotNull(response);
+            Assert.IsNotNull(response); 
             return response;
         }
 
